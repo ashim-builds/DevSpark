@@ -12,7 +12,8 @@ import { ADMIN_NAV_LINKS } from '@/lib/constants';
 const ICONS = { LayoutDashboard, Folder, Users, Briefcase, MessageSquare, Mail };
 
 function Sidebar({ isOpen, onClose, onLogout }) {
-  const pathname = usePathname();
+  const rawPathname = usePathname();
+  const pathname = rawPathname === '/' ? '/' : rawPathname?.replace(/\/$/, '') || '';
 
   return (
     <>
@@ -87,7 +88,8 @@ function Sidebar({ isOpen, onClose, onLogout }) {
 
 export default function AdminLayout({ children }) {
   const router     = useRouter();
-  const pathname   = usePathname();
+  const rawPathname = usePathname();
+  const pathname = rawPathname === '/' ? '/' : rawPathname?.replace(/\/$/, '') || '';
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [checking, setChecking] = useState(true);
   const isLoginPage = pathname === '/admin/login';

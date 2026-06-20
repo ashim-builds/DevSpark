@@ -10,7 +10,8 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 export default function Navbar() {
-  const pathname = usePathname();
+  const rawPathname = usePathname();
+  const pathname = rawPathname === '/' ? '/' : rawPathname?.replace(/\/$/, '') || '';
   const isAdmin = pathname?.startsWith("/admin");
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
