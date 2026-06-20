@@ -14,9 +14,28 @@ const mongoose = require("mongoose");
 const app = express();
 
 // Middleware
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://devsparkhq.onrender.com"
+];
+
+if (process.env.FRONTEND_URL) {
+  const cleanFrontendUrl = process.env.FRONTEND_URL.replace(/\/$/, "");
+  if (!allowedOrigins.includes(cleanFrontendUrl)) {
+    allowedOrigins.push(cleanFrontendUrl);
+  }
+}
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Origin ${origin} not allowed by CORS`));
+      }
+    },
     credentials: true,
   }),
 );
