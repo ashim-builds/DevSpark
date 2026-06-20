@@ -43,7 +43,7 @@ export default function Navbar() {
                group-hover:bg-primary-500/25 transition-all duration-300"
               />
               <Image
-                src="/DevSpark Icon.png"
+                src="/devspark-icon.png"
                 alt="DevSpark Logo"
                 width={100}
                 height={100}

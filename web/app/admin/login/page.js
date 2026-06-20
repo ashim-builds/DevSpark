@@ -74,7 +74,7 @@ export default function AdminLoginPage() {
               <div className="absolute inset-0 rounded-full bg-primary-500/20 blur-lg group-hover:blur-xl transition-all" />
 
               <Image
-                src="/DevSpark Icon.png"
+                src="/devspark-icon.png"
                 alt="DevSpark Logo"
                 width={100}
                 height={100}

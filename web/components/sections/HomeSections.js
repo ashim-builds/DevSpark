@@ -103,7 +103,7 @@ export function HeroSection({
               <div className="absolute inset-0 rounded-full animate-glow-pulse pointer-events-none" />
 
               <Image
-                src="/DevSpark Icon.png"
+                src="/devspark-icon.png"
                 alt="DevSpark Logo"
                 width={120}
                 height={120}

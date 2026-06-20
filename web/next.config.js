@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "export", // 🔥 IMPORTANT FIX
+  trailingSlash: true,
 
   images: {
     domains: [
