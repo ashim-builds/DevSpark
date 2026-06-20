@@ -750,8 +750,6 @@ video {
   --tw-gradient-to: transparent var(--tw-gradient-to-position);
 }
 /* ── Code bracket aesthetics ── */
-.bracket::before { content: '<'; font-family: JetBrains Mono, Fira Code, monospace; font-weight: 700; --tw-text-opacity: 1; color: rgb(249 115 22 / var(--tw-text-opacity, 1)); }
-.bracket::after  { content: '/>'; font-family: JetBrains Mono, Fira Code, monospace; font-weight: 700; --tw-text-opacity: 1; color: rgb(249 115 22 / var(--tw-text-opacity, 1)); }
 .sr-only {
   position: absolute;
   width: 1px;
@@ -966,12 +964,6 @@ video {
 }
 .mt-8 {
   margin-top: 2rem;
-}
-.mr-\[-40px\] {
-  margin-right: -40px;
-}
-.mr-\[-50px\] {
-  margin-right: -50px;
 }
 .line-clamp-2 {
   overflow: hidden;
@@ -1401,15 +1393,6 @@ video {
 }
 .gap-8 {
   gap: 2rem;
-}
-.gap-\[-10px\] {
-  gap: -10px;
-}
-.gap-\[-4s0px\] {
-  gap: -4s0px;
-}
-.gap-\[-40px\] {
-  gap: -40px;
 }
 .space-y-0\.5 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
@@ -1955,6 +1938,10 @@ video {
   font-size: 1.875rem;
   line-height: 2.25rem;
 }
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
 .text-base {
   font-size: 1rem;
   line-height: 1.5rem;
@@ -1974,10 +1961,6 @@ video {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
-}
-.text-4xl {
-  font-size: 2.25rem;
-  line-height: 2.5rem;
 }
 .font-bold {
   font-weight: 700;
