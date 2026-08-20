@@ -1,4 +1,4 @@
-# 🚀 DevSpark - Modern Full Stack Agency Website
+# DevSpark - Modern Full Stack Agency Website
 
 ![DevSpark](https://img.shields.io/badge/DevSpark-v1.0.0-blue?style=for-the-badge)
 ![Node.js](https://img.shields.io/badge/Node.js-18+-green?style=for-the-badge&logo=node.js)
@@ -8,25 +8,25 @@
 
 A stunning, production-ready full-stack website for a software development agency. Built with modern technologies, featuring a powerful REST API backend and a beautiful responsive frontend.
 
-## ✨ Features
+## Features
 
-- 🎨 **Modern UI/UX** - Beautiful responsive design with Tailwind CSS
-- 📱 **Fully Responsive** - Works seamlessly on mobile, tablet, and desktop
-- 🔐 **Secure Admin Panel** - JWT authentication and role-based access control
-- 🗄️ **MongoDB Integration** - NoSQL database with Mongoose ORM
-- ⚡ **Fast Performance** - Next.js 14 with optimized production builds
-- 🎭 **Smooth Animations** - Framer Motion for delightful interactions
-- 🔔 **Toast Notifications** - React Hot Toast for user feedback
-- 🎯 **SEO Optimized** - Meta tags, robots.txt, sitemap.xml
-- 📞 **Contact Management** - Collect and manage client inquiries
-- 👥 **Team Showcase** - Display team members with testimonials
-- 🏆 **Portfolio** - Showcase projects and services
+- **Modern UI/UX** - Beautiful responsive design with Tailwind CSS
+- **Fully Responsive** - Works seamlessly on mobile, tablet, and desktop
+- **Secure Admin Panel** - JWT authentication and role-based access control
+- **MongoDB Integration** - NoSQL database with Mongoose ORM
+- **Fast Performance** - Next.js 14 with optimized production builds
+- **Smooth Animations** - Framer Motion for delightful interactions
+- **Toast Notifications** - React Hot Toast for user feedback
+- **SEO Optimized** - Meta tags, robots.txt, sitemap.xml
+- **Contact Management** - Collect and manage client inquiries
+- **Team Showcase** - Display team members with testimonials
+- **Portfolio** - Showcase projects and services
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 DevSpark/
-├── 📦 services/                 # Backend API (Node.js + Express)
+├── services/                 # Backend API (Node.js + Express)
 │   ├── models/                  # Mongoose schemas (Admin, Project, etc.)
 │   ├── routes/                  # API endpoints
 │   ├── middleware/              # Authentication & middleware
@@ -35,7 +35,7 @@ DevSpark/
 │   ├── package.json
 │   └── .env                     # Backend environment variables
 │
-├── 🌐 web/                      # Frontend (Next.js 14)
+├── web/                      # Frontend (Next.js 14)
 │   ├── app/                     # App Router pages & layouts
 │   ├── components/              # Reusable React components
 │   │   ├── layout/              # Header, Footer, Navbar
@@ -50,7 +50,7 @@ DevSpark/
 └── README.md                    # This file
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -117,18 +117,18 @@ DevSpark/
    ```
 
 8. **Access the Application**
-   - 🌐 **Frontend**: http://localhost:3000
-   - ⚙️ **Backend API**: http://localhost:5000/api
-   - 🔐 **Admin Panel**: http://localhost:3000/admin/login
+   - **Frontend**: http://localhost:3000
+   - **Backend API**: http://localhost:5000/api
+   - **Admin Panel**: http://localhost:3000/admin/login
 
-### 🔑 Default Admin Credentials
+### Default Admin Credentials
 
-> ⚠️ **Important**: Change these credentials in production!
+> **Important**: Change these credentials in production!
 
 - **Email**: `admin@devspark.com`
 - **Password**: `admin123`
 
-## 📜 Available Scripts
+## Available Scripts
 
 ### Backend Scripts (services/)
 
@@ -147,7 +147,7 @@ DevSpark/
 | `npm start` | Start production server |
 | `npm run lint` | Run ESLint |
 
-## 🔧 Environment Variables
+## Environment Variables
 
 ### Backend (services/.env)
 
@@ -174,7 +174,7 @@ FRONTEND_URL=http://localhost:3000
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Backend
 - **Runtime**: Node.js 18+
@@ -195,7 +195,7 @@ NEXT_PUBLIC_API_URL=http://localhost:5000/api
 - **Notifications**: React Hot Toast
 - **Utilities**: clsx for className management
 
-## 📦 API Endpoints
+## API Endpoints
 
 Base URL: `http://localhost:5000/api`
 
@@ -214,7 +214,7 @@ Base URL: `http://localhost:5000/api`
 - `POST /contact/messages` - Submit contact form
 - `GET /contact/messages` - Get all messages (admin only)
 
-## 🎨 Component Overview
+## Component Overview
 
 ### Pages
 - `home` - Landing page with hero, features, CTA
@@ -242,7 +242,7 @@ Base URL: `http://localhost:5000/api`
 - **Testimonial** - Client testimonials
 - **ContactMessage** - Contact form submissions
 
-## 🚀 Deployment
+## Deployment
 
 ### Deploy Backend
 - **Heroku**: `heroku create && git push heroku main`
@@ -256,26 +256,26 @@ Base URL: `http://localhost:5000/api`
 ### Environment Variables for Production
 Update environment variables in your hosting platform dashboard before deploying.
 
-## 🔒 Security Best Practices
+## Security Best Practices
 
-- ✅ Change default admin credentials immediately
-- ✅ Use strong, unique JWT_SECRET in production
-- ✅ Enable HTTPS on production servers
-- ✅ Use environment variables (never commit .env)
-- ✅ Validate and sanitize all user inputs
-- ✅ Enable CORS only for trusted domains
-- ✅ Regular database backups
-- ✅ Keep dependencies updated
+- Change default admin credentials immediately
+- Use strong, unique JWT_SECRET in production
+- Enable HTTPS on production servers
+- Use environment variables (never commit .env)
+- Validate and sanitize all user inputs
+- Enable CORS only for trusted domains
+- Regular database backups
+- Keep dependencies updated
 
-## 📝 License
+## License
 
 This project is open source and available under the MIT License.
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📞 Support
+## Support
 
 For support, email support@devspark.com or open an issue on GitHub.
 
