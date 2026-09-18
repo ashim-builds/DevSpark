@@ -76,3 +76,5 @@ production/
 .cache
 .env.production
 .env.staging
+
+deployment/

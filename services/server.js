@@ -9,14 +9,17 @@ const app = express();
 // Middleware
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://devsparkhq.onrender.com"
+  "https://devsparkco.com",
+  "https://www.devsparkco.com",
 ];
 
 if (process.env.FRONTEND_URL) {
-  const cleanFrontendUrl = process.env.FRONTEND_URL.replace(/\/$/, "");
-  if (!allowedOrigins.includes(cleanFrontendUrl)) {
-    allowedOrigins.push(cleanFrontendUrl);
-  }
+  const urls = process.env.FRONTEND_URL.split(",").map((u) => u.trim().replace(/\/$/, ""));
+  urls.forEach((url) => {
+    if (url && !allowedOrigins.includes(url)) {
+      allowedOrigins.push(url);
+    }
+  });
 }
 
 app.use(
