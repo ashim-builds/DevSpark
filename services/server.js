@@ -1,15 +1,8 @@
 require("dotenv").config({ path: __dirname + "/.env" });
-const dns = require("dns");
-
-// Fix for Windows: Node.js sometimes uses loopback (127.0.0.1) as the DNS resolver,
-// causing querySrv ECONNREFUSED on MongoDB Atlas connection strings.
-if (dns.getServers().includes("127.0.0.1") || dns.getServers().includes("::1")) {
-  dns.setServers(["1.1.1.1", "8.8.8.8"]);
-}
 
 const express = require("express");
 const cors = require("cors");
-const mongoose = require("mongoose");
+const { initDBWithRetry } = require("./db");
 
 const app = express();
 
@@ -39,16 +32,13 @@ app.use(
     credentials: true,
   }),
 );
-app.use(express.json());
+app.use(express.json({ limit: "20mb" }));
+app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 
-// MongoDB Connection
-const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://localhost:27017/devspark";
-
-mongoose
-  .connect(MONGODB_URI)
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+// Initialize MySQL Database
+initDBWithRetry().catch((err) => {
+  console.error("MySQL initialization error:", err.message);
+});
 
 // Routes
 app.use("/api/auth", require("./routes/auth"));
@@ -58,10 +48,11 @@ app.use("/api/team", require("./routes/team"));
 app.use("/api/testimonials", require("./routes/testimonials"));
 app.use("/api/contact", require("./routes/contact"));
 app.use("/api/dashboard", require("./routes/dashboard"));
+app.use("/api/images", require("./routes/images"));
 
 // Health check
 app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", timestamp: new Date().toISOString() });
+  res.json({ status: "ok", database: "mysql", timestamp: new Date().toISOString() });
 });
 
 // Error handler

@@ -1,20 +1,59 @@
-const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const { query } = require('../db');
 
-const AdminSchema = new mongoose.Schema({
-  name: { type: String },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }
-}, { timestamps: true });
+class Admin {
+  static async findByEmail(email) {
+    const [rows] = await query('SELECT * FROM admins WHERE email = ?', [email]);
+    if (!rows || rows.length === 0) return null;
+    const admin = rows[0];
+    return {
+      id: admin.id,
+      _id: admin.id.toString(),
+      name: admin.name,
+      email: admin.email,
+      password: admin.password,
+      comparePassword: async function (candidatePassword) {
+        return bcrypt.compare(candidatePassword, admin.password);
+      },
+    };
+  }
 
-AdminSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
-});
+  static async findById(id) {
+    const [rows] = await query('SELECT id, name, email, created_at, updated_at FROM admins WHERE id = ?', [id]);
+    if (!rows || rows.length === 0) return null;
+    const admin = rows[0];
+    return {
+      id: admin.id,
+      _id: admin.id.toString(),
+      name: admin.name,
+      email: admin.email,
+      createdAt: admin.created_at,
+      updatedAt: admin.updated_at,
+    };
+  }
 
-AdminSchema.methods.comparePassword = async function(password) {
-  return bcrypt.compare(password, this.password);
-};
+  static async create({ name, email, password }) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const [result] = await query(
+      'INSERT INTO admins (name, email, password) VALUES (?, ?, ?)',
+      [name || 'Admin', email, hashedPassword]
+    );
+    return {
+      id: result.insertId,
+      _id: result.insertId.toString(),
+      name: name || 'Admin',
+      email,
+    };
+  }
 
-module.exports = mongoose.model('Admin', AdminSchema);
+  static async deleteMany() {
+    await query('DELETE FROM admins');
+  }
+
+  static async count() {
+    const [rows] = await query('SELECT COUNT(*) as count FROM admins');
+    return rows[0].count;
+  }
+}
+
+module.exports = Admin;

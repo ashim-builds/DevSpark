@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const testimonials = await Testimonial.find().sort({ createdAt: -1 });
+    const testimonials = await Testimonial.findAll();
     res.json(testimonials);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -27,8 +27,7 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', auth, async (req, res) => {
   try {
-    const testimonial = new Testimonial(req.body);
-    const saved = await testimonial.save();
+    const saved = await Testimonial.create(req.body);
     res.status(201).json(saved);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -37,11 +36,7 @@ router.post('/', auth, async (req, res) => {
 
 router.put('/:id', auth, async (req, res) => {
   try {
-    const testimonial = await Testimonial.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const testimonial = await Testimonial.update(req.params.id, req.body);
     if (!testimonial) {
       return res.status(404).json({ message: 'Testimonial not found' });
     }
@@ -53,8 +48,8 @@ router.put('/:id', auth, async (req, res) => {
 
 router.delete('/:id', auth, async (req, res) => {
   try {
-    const testimonial = await Testimonial.findByIdAndDelete(req.params.id);
-    if (!testimonial) {
+    const deleted = await Testimonial.delete(req.params.id);
+    if (!deleted) {
       return res.status(404).json({ message: 'Testimonial not found' });
     }
     res.json({ message: 'Testimonial deleted' });

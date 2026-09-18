@@ -3,17 +3,18 @@
 ![DevSpark](https://img.shields.io/badge/DevSpark-v1.0.0-blue?style=for-the-badge)
 ![Node.js](https://img.shields.io/badge/Node.js-18+-green?style=for-the-badge&logo=node.js)
 ![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
-![MongoDB](https://img.shields.io/badge/MongoDB-7+-green?style=for-the-badge&logo=mongodb)
+![MySQL](https://img.shields.io/badge/MySQL-8+-blue?style=for-the-badge&logo=mysql)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.4-blue?style=for-the-badge&logo=tailwind-css)
 
-A stunning, production-ready full-stack website for a software development agency. Built with modern technologies, featuring a powerful REST API backend and a beautiful responsive frontend.
+A stunning, production-ready full-stack website for a software development agency. Built with modern technologies, featuring a powerful MySQL REST API backend and a beautiful responsive Next.js frontend with direct MySQL image storage.
 
 ## ✨ Features
 
 - 🎨 **Modern UI/UX** - Beautiful responsive design with Tailwind CSS
 - 📱 **Fully Responsive** - Works seamlessly on mobile, tablet, and desktop
 - 🔐 **Secure Admin Panel** - JWT authentication and role-based access control
-- 🗄️ **MongoDB Integration** - NoSQL database with Mongoose ORM
+- 🗄️ **MySQL Integration** - High-performance relational database with connection pooling and automated schema setup
+- 🖼️ **Direct MySQL Image Store** - Binary image storage via `LONGBLOB` with optimized caching and streaming endpoints
 - ⚡ **Fast Performance** - Next.js 14 with optimized production builds
 - 🎭 **Smooth Animations** - Framer Motion for delightful interactions
 - 🔔 **Toast Notifications** - React Hot Toast for user feedback
@@ -26,10 +27,11 @@ A stunning, production-ready full-stack website for a software development agenc
 
 ```
 DevSpark/
-├── 📦 services/                 # Backend API (Node.js + Express)
-│   ├── models/                  # Mongoose schemas (Admin, Project, etc.)
-│   ├── routes/                  # API endpoints
+├── 📦 services/                 # Backend API (Node.js + Express + MySQL)
+│   ├── models/                  # MySQL models (Admin, Project, Image, etc.)
+│   ├── routes/                  # API endpoints (including image store)
 │   ├── middleware/              # Authentication & middleware
+│   ├── db.js                    # MySQL connection pool & table initializer
 │   ├── server.js                # Express server entry point
 │   ├── seed.js                  # Database seeding script
 │   ├── package.json
@@ -52,13 +54,41 @@ DevSpark/
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### 🐳 Docker Quickstart (Recommended - 1 Command Setup)
+
+Run the complete application stack (MySQL database, Node.js backend API, and Next.js frontend) with Docker:
+
+1. **Start all containers**:
+   ```bash
+   docker compose up -d --build
+   ```
+
+2. **Seed the database** (creates admin user & sample agency data):
+   ```bash
+   docker compose exec backend npm run seed
+   ```
+
+3. **Access the Application**:
+   - 🌐 **Frontend**: http://localhost:3000
+   - ⚙️ **Backend API**: http://localhost:5000/api
+   - 🔐 **Admin Panel**: http://localhost:3000/admin/login
+
+4. **Stop containers**:
+   ```bash
+   docker compose down
+   ```
+
+---
+
+### 💻 Manual Local Setup (Without Docker)
+
+#### Prerequisites
 
 - **Node.js** 18 or higher
-- **MongoDB** (local or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas))
+- **MySQL** 5.7+ or 8.0+ / MariaDB (via MySQL Server, XAMPP, or Laragon)
 - **npm** or **yarn** package manager
 
-### Installation & Setup
+#### Installation & Setup
 
 1. **Clone the repository**
    ```bash
@@ -75,13 +105,18 @@ DevSpark/
 
 3. **Configure Backend Environment**
    
-   Update `services/.env` with your values:
+   Update `services/.env` with your MySQL connection credentials:
    ```env
    PORT=5000
-   MONGODB_URI=mongodb://localhost:27017/devspark
+   DB_HOST=localhost
+   DB_PORT=3306
+   DB_USER=root
+   DB_PASSWORD=your_mysql_password
+   DB_NAME=devspark
    JWT_SECRET=your-super-secret-jwt-key-change-this
    FRONTEND_URL=http://localhost:3000
    ```
+   *(The backend will automatically create the `devspark` database and all required tables upon starting if they do not exist)*
 
 4. **Install Frontend Dependencies**
    ```bash
@@ -125,8 +160,8 @@ DevSpark/
 
 > ⚠️ **Important**: Change these credentials in production!
 
-- **Email**: `admin@devspark.com`
-- **Password**: `admin123`
+- **Email**: `devsparkhq@gmail.com`
+- **Password**: `Devspark@2009!`
 
 ## 📜 Available Scripts
 
@@ -136,7 +171,7 @@ DevSpark/
 |---------|-------------|
 | `npm run dev` | Start backend with auto-reload (nodemon) |
 | `npm start` | Start backend production server |
-| `npm run seed` | Populate database with sample data |
+| `npm run seed` | Populate MySQL database with admin and sample data |
 
 ### Frontend Scripts (web/)
 
@@ -155,10 +190,12 @@ DevSpark/
 # Server Configuration
 PORT=5000
 
-# Database
-MONGODB_URI=mongodb://localhost:27017/devspark
-# OR for MongoDB Atlas:
-# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/devspark?retryWrites=true&w=majority
+# MySQL Database
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=devspark
 
 # JWT Authentication
 JWT_SECRET=your-random-secret-key-min-32-chars
@@ -179,7 +216,8 @@ NEXT_PUBLIC_API_URL=http://localhost:5000/api
 ### Backend
 - **Runtime**: Node.js 18+
 - **Framework**: Express.js 4
-- **Database**: MongoDB 7+ with Mongoose 8
+- **Database**: MySQL 8+ with `mysql2` connection pooling
+- **Image Storage**: MySQL `LONGBLOB` with `multer` memory storage
 - **Authentication**: JWT (jsonwebtoken)
 - **Security**: bcryptjs for password hashing
 - **CORS**: cors middleware
@@ -205,14 +243,22 @@ Base URL: `http://localhost:5000/api`
 
 ### Content Management
 - `GET /projects` - Get all projects
+- `POST /projects` - Create project (admin only)
+- `PUT /projects/:id` - Update project (admin only)
+- `DELETE /projects/:id` - Delete project (admin only)
 - `GET /services` - Get all services
 - `GET /team` - Get team members
 - `GET /testimonials` - Get testimonials
 
+### Image Storage (MySQL)
+- `POST /images/upload` - Upload image file to MySQL LONGBLOB (admin only)
+- `GET /images/:id` - Stream binary image with cache headers
+- `DELETE /images/:id` - Delete image from MySQL (admin only)
+
 ### Admin Dashboard
 - `GET /dashboard/stats` - Get dashboard statistics
-- `POST /contact/messages` - Submit contact form
-- `GET /contact/messages` - Get all messages (admin only)
+- `POST /contact` - Submit contact form
+- `GET /contact` - Get all messages (admin only)
 
 ## 🎨 Component Overview
 
@@ -233,28 +279,15 @@ Base URL: `http://localhost:5000/api`
 - **UI**: Button, Card, Badge, Input, Modal, Loading
 - **Sections**: HomeSections with reusable content blocks
 
-## 🗄️ Database Models
+## 🗄️ Database Tables (MySQL)
 
-- **Admin** - Admin user credentials
-- **Project** - Portfolio projects
-- **Service** - Services offered
-- **TeamMember** - Team member profiles
-- **Testimonial** - Client testimonials
-- **ContactMessage** - Contact form submissions
-
-## 🚀 Deployment
-
-### Deploy Backend
-- **Heroku**: `heroku create && git push heroku main`
-- **Railway**: Connect GitHub repo to Railway
-- **Render**: Use render.com web services
-
-### Deploy Frontend
-- **Vercel**: `npm install -g vercel && vercel`
-- **Netlify**: Connect GitHub repo to Netlify
-
-### Environment Variables for Production
-Update environment variables in your hosting platform dashboard before deploying.
+- **admins** - Admin user credentials and timestamps
+- **projects** - Portfolio projects with JSON tech_stack and image references
+- **services** - Services offered with icons
+- **team_members** - Team profiles with JSON skills and social links
+- **testimonials** - Client reviews and ratings
+- **contact_messages** - Contact form inquiries
+- **images** - Direct binary image blobs (`data LONGBLOB`, filename, mime_type, size)
 
 ## 🔒 Security Best Practices
 
@@ -274,10 +307,6 @@ This project is open source and available under the MIT License.
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📞 Support
-
-For support, email support@devspark.com or open an issue on GitHub.
 
 ---
 

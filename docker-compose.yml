@@ -1,0 +1,68 @@
+services:
+  # MySQL Database Service
+  mysql:
+    image: mysql:8.0
+    container_name: devspark_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-devspark_root_secret}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-devspark}
+      MYSQL_USER: ${MYSQL_USER:-devspark_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-devspark_password}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p${MYSQL_ROOT_PASSWORD:-devspark_root_secret} || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 10s
+    networks:
+      - devspark-net
+
+  # Backend Node.js / Express API Service
+  backend:
+    build:
+      context: ./services
+      dockerfile: Dockerfile
+    container_name: devspark_backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      PORT: 5000
+      DATABASE_URL: mysql://root:${MYSQL_ROOT_PASSWORD:-devspark_root_secret}@mysql:3306/${MYSQL_DATABASE:-devspark}
+      JWT_SECRET: ${JWT_SECRET:-devspark_super_secret_jwt_key_2024}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+    ports:
+      - "5000:5000"
+    networks:
+      - devspark-net
+
+  # Frontend React SPA Web Service
+  frontend:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:5000/api}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:5000/api}
+    container_name: devspark_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    networks:
+      - devspark-net
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  devspark-net:
+    driver: bridge

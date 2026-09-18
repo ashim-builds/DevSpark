@@ -1,7 +1,7 @@
 {
   "name": "devspark-backend",
   "version": "1.0.0",
-  "description": "DevSpark Backend API with Node.js and MongoDB",
+  "description": "DevSpark Backend API with Node.js and MySQL",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -14,8 +14,8 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "mongodb": "^7.3.0",
-    "mongoose": "^8.4.4"
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.11.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"

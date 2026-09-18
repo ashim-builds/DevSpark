@@ -8,8 +8,10 @@ const router = express.Router();
 router.post('/', async (req, res) => {
   try {
     const { name, email, message } = req.body;
-    const contactMessage = new ContactMessage({ name, email, message });
-    const saved = await contactMessage.save();
+    if (!name || !email || !message) {
+      return res.status(400).json({ message: 'Name, email, and message are required' });
+    }
+    const saved = await ContactMessage.create({ name, email, message });
     res.status(201).json({ message: 'Message sent successfully', data: saved });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -19,7 +21,7 @@ router.post('/', async (req, res) => {
 // Protected routes (admin only)
 router.get('/', auth, async (req, res) => {
   try {
-    const messages = await ContactMessage.find().sort({ createdAt: -1 });
+    const messages = await ContactMessage.findAll();
     res.json(messages);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -28,8 +30,8 @@ router.get('/', auth, async (req, res) => {
 
 router.delete('/:id', auth, async (req, res) => {
   try {
-    const message = await ContactMessage.findByIdAndDelete(req.params.id);
-    if (!message) {
+    const deleted = await ContactMessage.delete(req.params.id);
+    if (!deleted) {
       return res.status(404).json({ message: 'Message not found' });
     }
     res.json({ message: 'Message deleted' });
