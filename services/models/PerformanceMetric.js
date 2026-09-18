@@ -93,7 +93,7 @@ class PerformanceMetric {
     // 3. Response rate from contact messages in DB
     let responseRate = 0;
     try {
-      const [cRows] = await query('SELECT COUNT(*) as total FROM contact_messages');
+      const [cRows] = await query('SELECT COUNT(*) as total FROM contacts');
       if (cRows[0] && cRows[0].total > 0) {
         responseRate = 100;
       }
