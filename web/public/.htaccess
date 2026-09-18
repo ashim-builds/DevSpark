@@ -2,10 +2,11 @@
   RewriteEngine On
   RewriteBase /
 
-  # Do NOT rewrite /api requests - let Passenger / Node.js backend handle them
-  RewriteRule ^api(/.*)?$ - [L]
+  # 1. CRITICAL: Stop mod_rewrite immediately for any /api URLs so Passenger / Node.js handles them
+  RewriteCond %{REQUEST_URI} ^/api [NC]
+  RewriteRule ^ - [L]
 
-  # Handle React SPA routing - route everything to index.html if file/dir doesn't exist
+  # 2. Handle React SPA routing - route everything to index.html if file/dir doesn't exist
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
@@ -18,7 +19,7 @@
   ExpiresActive On
   ExpiresDefault "access plus 1 month"
 
-  # HTML files (no cache or short cache to get latest app version)
+  # HTML files (no cache)
   ExpiresByType text/html "access plus 0 seconds"
 
   # Static assets (JS, CSS, Media)
