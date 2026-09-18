@@ -1,42 +1,110 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DevSpark — Software Development Agency</title>
-    <meta name="description" content="DevSpark is a software development agency that crafts exceptional digital experiences. We build modern web and mobile applications that drive growth and delight users." />
-    <meta name="keywords" content="software development,web development,mobile app development,UI/UX design,custom software,cloud solutions" />
-    <meta name="author" content="DevSpark Team" />
-    <link rel="icon" href="/favicon.ico" />
+    <meta name="description" content="DevSpark is a premier software development agency building high-performance web applications, ERP business management systems, scalable e-commerce storefronts, and Android mobile apps." />
+    <meta name="keywords" content="software development, web development, ERP systems, ecommerce website, Android app development, custom software agency, PWA web app, management portal, IT solutions" />
+    <meta name="author" content="DevSpark" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="theme-color" content="#f97316" />
+
+    <!-- Canonical & Alternate Links -->
+    <link rel="canonical" href="https://devspark.com/" />
+
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://devspark.com/" />
+    <meta property="og:title" content="DevSpark — Software Development Agency" />
+    <meta property="og:description" content="DevSpark builds modern web and Android applications, business management systems, and e-commerce platforms that drive real business growth." />
+    <meta property="og:image" content="https://devspark.com/banner.png" />
+    <meta property="og:image:alt" content="DevSpark — Software Development Agency" />
+    <meta property="og:site_name" content="DevSpark" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://devspark.com/" />
+    <meta name="twitter:title" content="DevSpark — Software Development Agency" />
+    <meta name="twitter:description" content="DevSpark builds modern web and Android applications, business management systems, and e-commerce platforms that drive real business growth." />
+    <meta name="twitter:image" content="https://devspark.com/banner.png" />
+
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
 
-    <!-- Unregister legacy Next.js PWA ServiceWorkers & clear old caches -->
-    <script>
-      (function() {
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.getRegistrations().then(function(registrations) {
-            for (var i = 0; i < registrations.length; i++) {
-              registrations[i].unregister().then(function() {
-                console.log('[DevSpark] Unregistered old ServiceWorker.');
-              });
-            }
-          });
-        }
-        if ('caches' in window) {
-          caches.keys().then(function(keys) {
-            keys.forEach(function(key) {
-              caches.delete(key);
-            });
-          });
-        }
-      })();
-    </script>
-
+    <!-- Preconnect & Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+    <!-- JSON-LD Structured Data for Search Engines -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://devspark.com/#organization",
+          "name": "DevSpark",
+          "url": "https://devspark.com",
+          "logo": {
+            "@type": "ImageObject",
+            "@id": "https://devspark.com/#logo",
+            "url": "https://devspark.com/logo-orange.png",
+            "caption": "DevSpark Logo"
+          },
+          "image": "https://devspark.com/banner.png",
+          "description": "DevSpark is a modern software development agency specializing in web platforms, management systems, and e-commerce solutions.",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+1-555-0199",
+            "contactType": "customer service",
+            "email": "contact@devspark.com"
+          },
+          "sameAs": [
+            "https://twitter.com/devspark",
+            "https://github.com/devspark",
+            "https://linkedin.com/company/devspark"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://devspark.com/#website",
+          "url": "https://devspark.com",
+          "name": "DevSpark",
+          "publisher": {
+            "@id": "https://devspark.com/#organization"
+          },
+          "description": "Custom software development, web platforms, and mobile apps."
+        },
+        {
+          "@type": "ProfessionalService",
+          "@id": "https://devspark.com/#service",
+          "name": "DevSpark Software Development",
+          "url": "https://devspark.com",
+          "priceRange": "$$",
+          "serviceType": [
+            "Custom Business & Showcase Websites",
+            "Business Management & ERP Systems",
+            "Scalable E-Commerce Storefronts",
+            "Unified ERP + E-Commerce Systems",
+            "Advanced Android E-Commerce Apps",
+            "Web + Direct App Installation (PWA / APK)"
+          ],
+          "parentOrganization": {
+            "@id": "https://devspark.com/#organization"
+          }
+        }
+      ]
+    }
+    </script>
   </head>
-  <body style="background-color: #0d0b09; color: #f5f0e8;">
+  <body style="background-color: #faf8f5; color: #0f172a;">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

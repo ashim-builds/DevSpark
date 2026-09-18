@@ -85,6 +85,49 @@ async function initDB() {
     );
   `);
 
+  const [serviceCount] = await connectionPool.query('SELECT COUNT(*) as count FROM services');
+  if (serviceCount[0].count === 0) {
+    const defaultServices = [
+      [
+        'Custom Business & Showcase Websites',
+        'High-speed, responsive, and SEO-optimized business websites, portfolio showcases, and corporate landing pages designed with modern aesthetics and conversion-focused architecture.',
+        'Globe'
+      ],
+      [
+        'Business Management & ERP Systems',
+        'Robust web-based internal management software, role-based dashboards, inventory tracking, employee portals, and custom operational tools to automate daily workflows.',
+        'Server'
+      ],
+      [
+        'Scalable E-Commerce Storefronts',
+        'Complete online shopping platforms featuring rich product catalogs, integrated payment gateways, discount engines, and streamlined customer checkout experiences.',
+        'Layout'
+      ],
+      [
+        'Unified ERP + E-Commerce Systems',
+        'Powerful all-in-one ecosystem uniting your public online store directly with backend warehouse inventory, multi-branch point-of-sale, supplier management, and automated accounting.',
+        'Database'
+      ],
+      [
+        'Advanced Android E-Commerce Apps',
+        'Dedicated high-performance Android mobile apps tailored for shopping and customer engagement, equipped with push notifications, biometric logins, and offline caching.',
+        'Smartphone'
+      ],
+      [
+        'Web + Direct App Installation (PWA / APK)',
+        'Progressive Web Apps (PWA) and direct web-installable app solutions allowing users to install your app directly onto their Android and desktop devices straight from your website without app store friction.',
+        'Zap'
+      ]
+    ];
+
+    for (const [title, description, icon] of defaultServices) {
+      await connectionPool.query(
+        'INSERT INTO services (title, description, icon) VALUES (?, ?, ?)',
+        [title, description, icon]
+      );
+    }
+  }
+
   await connectionPool.query(`
     CREATE TABLE IF NOT EXISTS projects (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -153,7 +196,7 @@ async function initDB() {
       id INT AUTO_INCREMENT PRIMARY KEY,
       metric_key VARCHAR(100) NOT NULL UNIQUE,
       label VARCHAR(255) NOT NULL,
-      value INT NOT NULL DEFAULT 95,
+      value INT NOT NULL DEFAULT 0,
       color VARCHAR(50) NOT NULL DEFAULT '#f97316',
       display_order INT DEFAULT 0,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -164,12 +207,26 @@ async function initDB() {
   if (metricCount[0].count === 0) {
     await connectionPool.query(`
       INSERT INTO performance_metrics (metric_key, label, value, color, display_order) VALUES
-      ('project_completion_rate', 'Project Completion Rate', 98, '#f97316', 1),
-      ('client_satisfaction', 'Client Satisfaction', 96, '#22c55e', 2),
-      ('on_time_delivery', 'On-time Delivery', 94, '#3b82f6', 3),
-      ('response_rate', 'Response Rate', 100, '#a855f7', 4);
+      ('project_completion_rate', 'Project Completion Rate', 0, '#f97316', 1),
+      ('client_satisfaction', 'Client Satisfaction', 0, '#22c55e', 2),
+      ('on_time_delivery', 'On-time Delivery', 0, '#3b82f6', 3),
+      ('response_rate', 'Response Rate', 0, '#a855f7', 4);
     `);
   }
+
+  await connectionPool.query(`
+    CREATE TABLE IF NOT EXISTS site_settings (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      \`key\` VARCHAR(100) NOT NULL UNIQUE,
+      value TEXT NOT NULL,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    );
+  `);
+
+  // Seed default settings if not present
+  await connectionPool.query(`
+    INSERT IGNORE INTO site_settings (\`key\`, value) VALUES ('available_for_hire', 'true');
+  `);
 
   console.log(`Connected to MySQL database [${dbConfig.database}] at ${dbConfig.host}:${dbConfig.port}`);
 }

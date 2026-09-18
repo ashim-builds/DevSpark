@@ -25,11 +25,11 @@ function Modal({ isOpen, onClose, title, children, className, size = "md" }) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4">
+          <div className="flex min-h-full items-center justify-center p-3 sm:p-4 text-center">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -41,25 +41,26 @@ function Modal({ isOpen, onClose, title, children, className, size = "md" }) {
             >
               <Dialog.Panel
                 className={cn(
-                  "w-full transform rounded-2xl bg-dark-800 border border-dark-700/80 shadow-2xl transition-all",
+                  "w-full transform rounded-2xl bg-white border border-slate-200 shadow-2xl transition-all text-left text-slate-900 max-h-[90vh] flex flex-col my-auto",
                   sizes[size],
                   className,
                 )}
               >
                 {title && (
-                  <div className="flex items-center justify-between px-6 py-4 border-b border-dark-700/80">
-                    <Dialog.Title className="text-lg font-semibold text-white">
+                  <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-slate-100 shrink-0">
+                    <Dialog.Title className="text-base sm:text-lg font-bold text-slate-900 truncate">
                       {title}
                     </Dialog.Title>
                     <button
                       onClick={onClose}
-                      className="p-1 rounded-lg hover:bg-dark-700 text-surface-400 hover:text-white transition-colors"
+                      className="p-1.5 -mr-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-800 transition-colors"
+                      aria-label="Close dialog"
                     >
                       <X className="w-5 h-5" />
                     </button>
                   </div>
                 )}
-                <div className="p-6">{children}</div>
+                <div className="p-4 sm:p-6 overflow-y-auto flex-1">{children}</div>
               </Dialog.Panel>
             </Transition.Child>
           </div>

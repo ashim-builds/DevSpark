@@ -98,6 +98,13 @@ export const publicStatsAPI = {
   getStats: () => fetchAPI('/dashboard/public-stats'),
 };
 
+// Site Settings API
+export const settingsAPI = {
+  getAvailableForHire: () => fetchAPI('/settings/available-for-hire'),
+  setAvailableForHire: (available) =>
+    fetchAPI('/settings/available-for-hire', { method: 'PUT', body: { available } }),
+};
+
 // Images API (MySQL Binary Blob Storage)
 export const imagesAPI = {
   upload: async (file) => {

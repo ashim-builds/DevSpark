@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import SEO from "@/components/common/SEO";
 import { projectsAPI, servicesAPI, testimonialsAPI, teamAPI, publicStatsAPI } from "@/lib/api";
 import {
   HeroSection,
@@ -17,7 +18,7 @@ export default function HomePage() {
     testimonialsPreview: [],
     testimonialsCount: 0,
     teamCount: 0,
-    satisfactionRate: 96,
+    satisfactionRate: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -36,13 +37,15 @@ export default function HomePage() {
 
         if (!isMounted) return;
 
-        // Calculate or retrieve live satisfaction rate
-        let liveSatisfactionRate = 96;
-        if (publicStats?.satisfactionRate !== undefined && publicStats?.satisfactionRate !== null) {
-          liveSatisfactionRate = Number(publicStats.satisfactionRate);
-        } else if (testimonials.length > 0) {
-          const totalRating = testimonials.reduce((acc, curr) => acc + (curr.rating || 5), 0);
+        // Calculate live satisfaction rate strictly from real testimonials
+        let liveSatisfactionRate = 0;
+        if (testimonials.length > 0) {
+          const totalRating = testimonials.reduce((acc, curr) => acc + (curr.rating || 0), 0);
           liveSatisfactionRate = Math.round((totalRating / (testimonials.length * 5)) * 100);
+        } else if (publicStats?.testimonials > 0 && publicStats?.satisfactionRate) {
+          liveSatisfactionRate = Number(publicStats.satisfactionRate);
+        } else {
+          liveSatisfactionRate = 0;
         }
 
         const pCount = publicStats?.projects ?? projects.length;
@@ -73,6 +76,11 @@ export default function HomePage() {
 
   return (
     <>
+      <SEO
+        title="DevSpark — Software Development Agency"
+        description="DevSpark crafts exceptional digital experiences. We build modern websites, ERP business management platforms, and high-performance Android mobile apps."
+        url="https://devspark.com"
+      />
       <HeroSection
         projectsCount={data.projectsCount}
         happyClientsCount={data.testimonialsCount}

@@ -4,9 +4,9 @@ import { Loader2 } from 'lucide-react';
 
 const buttonVariants = {
   primary: 'bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500 active:scale-[0.98]',
-  secondary: 'bg-dark-700 text-white hover:bg-dark-600 focus:ring-primary-500 active:scale-[0.98]',
-  outline: 'border border-primary-500 text-primary-400 hover:bg-primary-500 hover:text-white focus:ring-primary-500 active:scale-[0.98]',
-  ghost: 'text-surface-300 hover:text-white hover:bg-dark-800/60 focus:ring-dark-500',
+  secondary: 'bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-200 focus:ring-primary-500 active:scale-[0.98]',
+  outline: 'border border-primary-500 text-primary-600 hover:bg-primary-500 hover:text-white focus:ring-primary-500 active:scale-[0.98]',
+  ghost: 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus:ring-slate-300',
   danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 active:scale-[0.98]',
 };
 

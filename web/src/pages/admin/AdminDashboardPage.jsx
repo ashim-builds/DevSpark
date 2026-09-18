@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from '@/lib/router';
-import { Folder, Users, Briefcase, Mail, Loader2, Sliders, Sparkles, TrendingUp } from 'lucide-react';
+import Link from '@/components/common/Link';
+import { Folder, Users, Briefcase, Mail, Loader2, ArrowRight, MessageSquare, Star, Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { dashboardAPI, contactAPI } from '@/lib/api';
+import { dashboardAPI, contactAPI, settingsAPI } from '@/lib/api';
 import { formatDate } from '@/lib/utils';
-import Modal from '@/components/ui/Modal';
-import { Button } from '@/components/ui/Button';
 import toast from 'react-hot-toast';
 
 const fadeUp = (delay = 0) => ({
@@ -14,25 +13,13 @@ const fadeUp = (delay = 0) => ({
   transition: { duration: 0.4, delay, ease: 'easeOut' },
 });
 
-const DEFAULT_METRICS = [
-  { key: 'project_completion_rate', label: 'Project Completion Rate', value: 98, color: '#f97316' },
-  { key: 'client_satisfaction',     label: 'Client Satisfaction',     value: 96, color: '#22c55e' },
-  { key: 'on_time_delivery',        label: 'On-time Delivery',        value: 94, color: '#3b82f6' },
-  { key: 'response_rate',           label: 'Response Rate',           value: 100, color: '#a855f7' },
-];
-
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [performance, setPerformance] = useState(DEFAULT_METRICS);
   const [loading, setLoading] = useState(true);
   const [checking, setChecking] = useState(true);
-
-  // Edit Modal State
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editDraft, setEditDraft] = useState(DEFAULT_METRICS);
-  const [savingMetrics, setSavingMetrics] = useState(false);
-  const [autoCalculating, setAutoCalculating] = useState(false);
+  const [availableForHire, setAvailableForHire] = useState(false);
+  const [togglingHire, setTogglingHire] = useState(false);
 
   const router = useRouter();
 
@@ -51,22 +38,6 @@ export default function AdminDashboardPage() {
         ]);
         setStats(statsData);
         setMessages(messagesData.slice(0, 5));
-
-        if (statsData?.performance && Array.isArray(statsData.performance) && statsData.performance.length > 0) {
-          setPerformance(statsData.performance);
-          setEditDraft(statsData.performance);
-        } else {
-          // Fallback fetch if /stats didn't include it
-          try {
-            const perfRes = await dashboardAPI.getPerformance();
-            if (perfRes?.metrics && Array.isArray(perfRes.metrics)) {
-              setPerformance(perfRes.metrics);
-              setEditDraft(perfRes.metrics);
-            }
-          } catch {
-            // keep defaults
-          }
-        }
       } catch (err) {
         if (err.message?.includes('Invalid') || err.message?.includes('token')) {
           localStorage.removeItem('adminToken');
@@ -78,57 +49,24 @@ export default function AdminDashboardPage() {
       }
     }
     loadData();
+
+    // Load available for hire setting
+    settingsAPI.getAvailableForHire()
+      .then(d => setAvailableForHire(d.available))
+      .catch(() => {});
   }, [router]);
 
-  function handleOpenEdit() {
-    setEditDraft([...performance]);
-    setIsEditModalOpen(true);
-  }
-
-  function handleSliderChange(key, newValue) {
-    setEditDraft(prev =>
-      prev.map(m => (m.key === key ? { ...m, value: Number(newValue) } : m))
-    );
-  }
-
-  async function handleAutoCalculate() {
-    setAutoCalculating(true);
+  async function handleToggleHire() {
+    setTogglingHire(true);
     try {
-      const res = await dashboardAPI.getPerformance();
-      if (res?.autoCalculated) {
-        setEditDraft(prev =>
-          prev.map(m => {
-            if (res.autoCalculated[m.key] !== undefined) {
-              return { ...m, value: res.autoCalculated[m.key] };
-            }
-            return m;
-          })
-        );
-        toast.success('Metrics recalculated from database (reviews & messages)');
-      }
+      const next = !availableForHire;
+      await settingsAPI.setAvailableForHire(next);
+      setAvailableForHire(next);
+      toast.success(next ? '"Available for Hire" is now ON' : '"Available for Hire" is now OFF');
     } catch {
-      toast.error('Could not fetch auto calculations from database');
+      toast.error('Failed to update setting');
     } finally {
-      setAutoCalculating(false);
-    }
-  }
-
-  async function handleSaveMetrics(e) {
-    e.preventDefault();
-    setSavingMetrics(true);
-    try {
-      const res = await dashboardAPI.updatePerformance(editDraft);
-      if (res?.metrics) {
-        setPerformance(res.metrics);
-      } else {
-        setPerformance(editDraft);
-      }
-      toast.success('Performance metrics updated successfully');
-      setIsEditModalOpen(false);
-    } catch (err) {
-      toast.error(err.message || 'Failed to update performance metrics');
-    } finally {
-      setSavingMetrics(false);
+      setTogglingHire(false);
     }
   }
 
@@ -141,222 +79,175 @@ export default function AdminDashboardPage() {
   }
 
   const statCards = [
-    { label: 'Total Projects', key: 'projects', Icon: Folder, color: '#f97316', bg: 'rgba(249,115,22,0.1)', border: 'rgba(249,115,22,0.2)' },
-    { label: 'Team Members',   key: 'team',     Icon: Users, color: '#22c55e', bg: 'rgba(34,197,94,0.1)', border: 'rgba(34,197,94,0.2)' },
-    { label: 'Services',       key: 'services', Icon: Briefcase, color: '#3b82f6', bg: 'rgba(59,130,246,0.1)', border: 'rgba(59,130,246,0.2)' },
-    { label: 'Messages',       key: 'messages', Icon: Mail, color: '#a855f7', bg: 'rgba(168,85,247,0.1)', border: 'rgba(168,85,247,0.2)' },
+    { label: 'Total Projects', key: 'projects', Icon: Folder, color: '#f97316', bg: 'rgba(249,115,22,0.1)', border: 'rgba(249,115,22,0.2)', href: '/admin/projects' },
+    { label: 'Team Members',   key: 'team',     Icon: Users, color: '#22c55e', bg: 'rgba(34,197,94,0.1)', border: 'rgba(34,197,94,0.2)', href: '/admin/team' },
+    { label: 'Services',       key: 'services', Icon: Briefcase, color: '#3b82f6', bg: 'rgba(59,130,246,0.1)', border: 'rgba(59,130,246,0.2)', href: '/admin/services' },
+    { label: 'Messages',       key: 'messages', Icon: Mail, color: '#a855f7', bg: 'rgba(168,85,247,0.1)', border: 'rgba(168,85,247,0.2)', href: '/admin/messages' },
+  ];
+
+  const quickLinks = [
+    { title: 'Manage Projects', desc: 'Add or update showcased portfolio work', href: '/admin/projects', Icon: Folder, color: 'text-orange-600', bg: 'bg-orange-50 border-orange-200' },
+    { title: 'Manage Services', desc: 'Update software engineering offerings', href: '/admin/services', Icon: Briefcase, color: 'text-blue-600', bg: 'bg-blue-50 border-blue-200' },
+    { title: 'Manage Team', desc: 'Add and edit team member profiles', href: '/admin/team', Icon: Users, color: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-200' },
+    { title: 'Manage Testimonials', desc: 'Review client feedback & ratings', href: '/admin/testimonials', Icon: Star, color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200' },
+    { title: 'View All Messages', desc: 'Read and reply to user inquiries', href: '/admin/messages', Icon: MessageSquare, color: 'text-purple-600', bg: 'bg-purple-50 border-purple-200' },
   ];
 
   return (
-    <div className="p-6 space-y-8">
-      <div>
-        <h1 className="text-2xl font-display font-bold text-white">Dashboard</h1>
-        <p className="text-surface-500 text-sm mt-1">Welcome back — here is an overview of your content.</p>
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold font-display text-slate-900">Dashboard</h1>
+          <p className="text-slate-500 text-sm mt-0.5">Welcome back to the DevSpark administration panel</p>
+        </div>
       </div>
 
-      {/* Stat cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {statCards.map(({ label, key, Icon, color, bg, border }, i) => (
-          <motion.div key={key} {...fadeUp(i * 0.08)}
-            className="rounded-2xl p-5 border"
-            style={{ background: bg, borderColor: border }}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-sm text-surface-400">{label}</p>
-              <div className="p-2 rounded-xl" style={{ background: bg, border: `1px solid ${border}` }}>
-                <Icon className="w-4 h-4" style={{ color }} />
-              </div>
-            </div>
-            <p className="text-3xl font-bold font-display" style={{ color }}>
-              {loading ? '—' : (stats?.[key] ?? 0)}
+      {/* Available for Hire Switcher */}
+      <motion.div {...fadeUp(0.05)} className="flex items-center justify-between bg-white border border-slate-200 rounded-2xl px-5 py-4 shadow-xs">
+        <div className="flex items-center gap-3">
+          <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-lg transition-colors ${
+            availableForHire ? 'bg-emerald-50 border border-emerald-200' : 'bg-slate-100 border border-slate-200'
+          }`}>
+            {availableForHire ? '🟢' : '🔴'}
+          </div>
+          <div>
+            <p className="font-semibold text-slate-900 text-sm">Available for Hire</p>
+            <p className="text-xs text-slate-500 mt-0.5">
+              {availableForHire ? 'Shown on the public navbar' : 'Hidden from the public navbar'}
             </p>
+          </div>
+        </div>
+        <button
+          onClick={handleToggleHire}
+          disabled={togglingHire}
+          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none ${
+            availableForHire ? 'bg-emerald-500' : 'bg-slate-300'
+          } ${togglingHire ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+          aria-label="Toggle available for hire"
+        >
+          <span
+            className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200 ${
+              availableForHire ? 'translate-x-6' : 'translate-x-1'
+            }`}
+          />
+        </button>
+      </motion.div>
+
+      {/* Stat cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {statCards.map(({ label, key, Icon, color, bg, border, href }, i) => (
+          <motion.div key={key} {...fadeUp(i * 0.08)}>
+            <Link
+              href={href}
+              className="block bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md hover:border-slate-300 transition-all group"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-sm font-medium text-slate-600 group-hover:text-slate-900 transition-colors">{label}</p>
+                <div className="p-2.5 rounded-xl transition-transform group-hover:scale-105" style={{ background: bg, border: `1px solid ${border}` }}>
+                  <Icon className="w-4 h-4" style={{ color }} />
+                </div>
+              </div>
+              <p className="text-3xl font-bold font-display" style={{ color }}>
+                {loading ? '—' : (stats?.[key] ?? 0)}
+              </p>
+            </Link>
           </motion.div>
         ))}
       </div>
 
-      {/* Activity + Metrics */}
+      {/* Activity + Quick Navigation */}
       <div className="grid lg:grid-cols-2 gap-6">
 
         {/* Recent messages */}
         <motion.div {...fadeUp(0.35)}
-          className="card-dark p-6 rounded-2xl border border-dark-700/60">
-          <h2 className="font-semibold text-white mb-5">Recent Messages</h2>
-          {loading
-            ? Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="flex gap-3 mb-4 last:mb-0">
-                  <div className="w-8 h-8 rounded-lg bg-dark-700 shrink-0 animate-pulse" />
-                  <div className="flex-1 space-y-2">
-                    <div className="h-3 w-1/2 bg-dark-700 rounded animate-pulse" />
-                    <div className="h-2.5 w-3/4 bg-dark-700 rounded animate-pulse" />
-                  </div>
-                </div>
-              ))
-            : messages.length > 0
-              ? messages.map(msg => (
-                  <div key={msg._id || msg.id} className="flex gap-3 pb-4 mb-4 border-b border-dark-800/60 last:border-0 last:mb-0 last:pb-0">
-                    <div className="p-2 rounded-lg bg-primary-500/10 border border-primary-500/20 shrink-0">
-                      <Mail className="w-4 h-4 text-primary-400" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-white truncate">{msg.name}</p>
-                      <p className="text-xs text-primary-400 truncate">{msg.email}</p>
-                      <p className="text-xs text-surface-400 mt-1 line-clamp-2">{msg.message}</p>
-                      <p className="text-xs text-surface-600 mt-1">{formatDate(msg.createdAt || msg.submitted_at)}</p>
+          className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-2">
+                <Mail className="w-5 h-5 text-primary-600" />
+                <h2 className="font-bold text-slate-900">Recent Inquiries</h2>
+              </div>
+              <Link href="/admin/messages" className="text-xs font-semibold text-primary-600 hover:text-primary-700">
+                View all →
+              </Link>
+            </div>
+            {loading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="flex gap-3 mb-4 last:mb-0">
+                    <div className="w-8 h-8 rounded-lg bg-slate-100 shrink-0 animate-pulse" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-3 w-1/2 bg-slate-100 rounded animate-pulse" />
+                      <div className="h-2.5 w-3/4 bg-slate-100 rounded animate-pulse" />
                     </div>
                   </div>
                 ))
-              : <p className="text-sm text-surface-500 py-4 text-center">No messages yet</p>}
+              : messages.length > 0
+                ? messages.map(msg => (
+                    <div key={msg._id || msg.id} className="flex gap-3 pb-4 mb-4 border-b border-slate-100 last:border-0 last:mb-0 last:pb-0">
+                      <div className="p-2.5 rounded-xl bg-orange-50 border border-orange-200 shrink-0 self-start">
+                        <Mail className="w-4 h-4 text-primary-600" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-sm font-bold text-slate-900 truncate">{msg.name}</p>
+                          <span className="text-[11px] text-slate-400 shrink-0">{formatDate(msg.createdAt || msg.submitted_at)}</span>
+                        </div>
+                        <p className="text-xs font-medium text-primary-600 truncate">{msg.email}</p>
+                        <p className="text-xs text-slate-600 mt-1 line-clamp-2">{msg.message}</p>
+                      </div>
+                    </div>
+                  ))
+                : <p className="text-sm text-slate-500 py-12 text-center">No inquiries received yet.</p>}
+          </div>
+
+          <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>Contact inquiries from public form</span>
+            <Link href="/admin/messages" className="text-primary-600 font-semibold hover:underline">
+              Inbox →
+            </Link>
+          </div>
         </motion.div>
 
-        {/* Dynamic Performance metrics */}
+        {/* Quick Management Navigation */}
         <motion.div {...fadeUp(0.42)}
-          className="card-dark p-6 rounded-2xl border border-dark-700/60 flex flex-col justify-between">
+          className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-primary-400" />
-                <h2 className="font-semibold text-white">Performance Overview</h2>
-              </div>
-              <button
-                onClick={handleOpenEdit}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-primary-400 bg-primary-500/10 hover:bg-primary-500/20 border border-primary-500/25 transition-all hover:scale-105 active:scale-95"
-                title="Adjust Performance Metrics"
-              >
-                <Sliders className="w-3.5 h-3.5" />
-                <span>Adjust</span>
-              </button>
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="font-bold text-slate-900">Quick Actions</h2>
+              <span className="text-xs text-slate-400 font-medium">Manage Site Content</span>
             </div>
 
-            <div className="space-y-5">
-              {performance.map(({ key, label, value, color }) => (
-                <div key={key || label}>
-                  <div className="flex justify-between text-sm mb-1.5">
-                    <span className="text-surface-400">{label}</span>
-                    <span className="font-semibold transition-colors duration-300" style={{ color }}>
-                      {value}%
-                    </span>
+            <div className="space-y-3">
+              {quickLinks.map(({ title, desc, href, Icon, color, bg }) => (
+                <Link
+                  key={title}
+                  href={href}
+                  className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50/70 hover:bg-orange-50/60 border border-slate-200/80 hover:border-orange-200 transition-all group"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className={`p-2.5 rounded-xl border ${bg} shrink-0`}>
+                      <Icon className={`w-4 h-4 ${color}`} />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-slate-900 group-hover:text-primary-600 transition-colors">{title}</p>
+                      <p className="text-xs text-slate-500 truncate">{desc}</p>
+                    </div>
                   </div>
-                  <div className="h-1.5 rounded-full bg-dark-800 overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${value}%` }}
-                      transition={{ duration: 0.8, delay: 0.1, ease: 'easeOut' }}
-                      className="h-full rounded-full"
-                      style={{ background: color }}
-                    />
-                  </div>
-                </div>
+                  <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-primary-600 group-hover:translate-x-0.5 transition-all shrink-0 ml-2" />
+                </Link>
               ))}
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-dark-800/60 flex items-center justify-between text-xs text-surface-500">
-            <span>Powered by MySQL & live metrics</span>
-            <button
-              onClick={handleOpenEdit}
-              className="text-primary-400 hover:text-primary-300 hover:underline"
-            >
-              Configure targets →
-            </button>
+          <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>DevSpark Management System</span>
+            <Link href="/" target="_blank" className="text-primary-600 font-semibold hover:underline">
+              View live site ↗
+            </Link>
           </div>
         </motion.div>
       </div>
-
-      {/* Adjust Metrics Modal */}
-      <Modal
-        isOpen={isEditModalOpen}
-        onClose={() => !savingMetrics && setIsEditModalOpen(false)}
-        title="Adjust Performance Metrics"
-        size="md"
-      >
-        <form onSubmit={handleSaveMetrics} className="space-y-5">
-          <p className="text-xs text-surface-400">
-            Adjust the live performance percentages or auto-calculate based on actual testimonials and messages stored in the database.
-          </p>
-
-          <div className="space-y-4 pt-1">
-            {editDraft.map((metric) => (
-              <div key={metric.key || metric.label} className="p-3.5 rounded-xl bg-dark-900/60 border border-dark-700/60 space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-white font-medium">{metric.label}</span>
-                  <span
-                    className="px-2 py-0.5 rounded-md font-bold text-xs"
-                    style={{ background: `${metric.color}20`, color: metric.color, border: `1px solid ${metric.color}40` }}
-                  >
-                    {metric.value}%
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={metric.value}
-                    onChange={(e) => handleSliderChange(metric.key, e.target.value)}
-                    className="w-full h-1.5 rounded-lg appearance-none cursor-pointer bg-dark-700 accent-primary-500"
-                    style={{ accentColor: metric.color }}
-                  />
-                  <input
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={metric.value}
-                    onChange={(e) => handleSliderChange(metric.key, Math.max(0, Math.min(100, Number(e.target.value))))}
-                    className="w-16 px-2 py-1 bg-dark-800 border border-dark-700 rounded-lg text-white text-xs text-center font-mono focus:outline-none focus:border-primary-500"
-                  />
-                </div>
-
-                {/* Mini Preview Bar */}
-                <div className="h-1 rounded-full bg-dark-800 overflow-hidden">
-                  <div
-                    className="h-full transition-all duration-200"
-                    style={{ width: `${metric.value}%`, background: metric.color }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex items-center justify-between pt-2">
-            <button
-              type="button"
-              disabled={autoCalculating || savingMetrics}
-              onClick={handleAutoCalculate}
-              className="flex items-center gap-1.5 text-xs text-surface-400 hover:text-white px-3 py-1.5 rounded-lg border border-dark-700 hover:border-dark-600 transition-colors disabled:opacity-50"
-            >
-              {autoCalculating ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin text-primary-400" />
-              ) : (
-                <Sparkles className="w-3.5 h-3.5 text-primary-400" />
-              )}
-              <span>Calculate from DB</span>
-            </button>
-
-            <div className="flex items-center gap-2">
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                disabled={savingMetrics}
-                onClick={() => setIsEditModalOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                variant="primary"
-                size="sm"
-                disabled={savingMetrics}
-                className="flex items-center gap-1.5"
-              >
-                {savingMetrics && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                <span>Save Changes</span>
-              </Button>
-            </div>
-          </div>
-        </form>
-      </Modal>
     </div>
   );
 }

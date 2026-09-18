@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="sparkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fb923c" />
+      <stop offset="50%" stop-color="#f97316" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+  </defs>
+
+  <g>
+    <!-- Left chevron < -->
+    <path
+      d="M 195 150 L 95 250 C 90 255 90 257 95 262 L 195 362"
+      fill="none"
+      stroke="url(#sparkGrad)"
+      stroke-width="46"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Right chevron > -->
+    <path
+      d="M 317 150 L 417 250 C 422 255 422 257 417 262 L 317 362"
+      fill="none"
+      stroke="url(#sparkGrad)"
+      stroke-width="46"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Center Flame / Spark -->
+    <path
+      d="M 262 58
+         C 270 130 252 175 214 216
+         C 192 240 190 268 205 284
+         C 216 295 234 294 250 285
+         C 230 330 242 385 250 454
+         C 244 388 262 340 298 296
+         C 320 270 322 242 307 226
+         C 296 215 278 216 262 225
+         C 282 180 270 125 262 58 Z"
+      fill="url(#sparkGrad)"
+    />
+  </g>
+</svg>

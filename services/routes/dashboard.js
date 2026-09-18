@@ -25,15 +25,17 @@ router.get('/public-stats', async (req, res) => {
       metricsMap[m.key] = m.value;
     }
 
+    const calculated = await PerformanceMetric.getCalculatedFromDB();
+
     res.json({
       projects: Number(projects),
       services: Number(services),
       team: Number(team),
       testimonials: Number(testimonials),
-      satisfactionRate: metricsMap['client_satisfaction'] !== undefined ? Number(metricsMap['client_satisfaction']) : 96,
-      completionRate: metricsMap['project_completion_rate'] !== undefined ? Number(metricsMap['project_completion_rate']) : 98,
-      onTimeDelivery: metricsMap['on_time_delivery'] !== undefined ? Number(metricsMap['on_time_delivery']) : 94,
-      responseRate: metricsMap['response_rate'] !== undefined ? Number(metricsMap['response_rate']) : 100,
+      satisfactionRate: Number(testimonials) > 0 ? calculated.client_satisfaction : 0,
+      completionRate: Number(projects) > 0 ? calculated.project_completion_rate : 0,
+      onTimeDelivery: Number(projects) > 0 ? calculated.on_time_delivery : 0,
+      responseRate: calculated.response_rate,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

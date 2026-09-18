@@ -51,31 +51,38 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer
-      className="relative overflow-hidden border-t border-dark-800"
-      style={{ background: 'linear-gradient(to bottom, #0f0c0a, #0d0b09)' }}
-    >
-      {/* Subtle orange glow at top */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[1px] bg-gradient-to-r from-transparent via-primary-500/40 to-transparent" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[80px] bg-primary-500/5 blur-3xl pointer-events-none" />
+    <footer className="relative overflow-hidden border-t border-zinc-800/80 bg-[#121316] text-white">
+      {/* Subtle warm ambient light glow */}
+      <div className="absolute inset-0 pointer-events-none opacity-40">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(circle 800px at 50% -20%, rgba(249,115,22,0.07) 0%, transparent 60%)",
+          }}
+        />
+      </div>
 
-      <div className="container-custom py-16">
+      <div className="container-custom py-16 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
 
           {/* Brand column */}
           <div className="lg:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 group mb-5">
               <div className="relative">
-                <span className="absolute inset-0 rounded-full bg-primary-500/15 blur-md group-hover:bg-primary-500/25 transition-all" />
-                <DevSparkLogoFooter />
+                <img
+                  src="/logo-white.png"
+                  alt="DevSpark Logo"
+                  className="w-14 h-14 object-contain"
+                />
               </div>
               <span className="text-xl font-display font-bold">
-                <span className="text-primary-400">Dev</span>
+                <span className="text-primary-500">Dev</span>
                 <span className="text-white">Spark</span>
               </span>
             </Link>
 
-            <p className="text-surface-400 text-sm leading-relaxed mb-6">
+            <p className="text-zinc-300 text-sm leading-relaxed mb-6 max-w-sm">
               Innovating the future, one line at a time. We craft exceptional digital experiences that transform businesses.
             </p>
 
@@ -88,9 +95,9 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="p-2 rounded-lg border border-dark-700 bg-dark-800/60
-                             text-surface-400 hover:text-primary-400 hover:border-primary-500/40
-                             hover:bg-primary-500/10 transition-all duration-200"
+                  className="p-2.5 rounded-xl border border-zinc-800 bg-zinc-900/80 text-zinc-300
+                             hover:text-white hover:border-primary-500/60 hover:bg-primary-500/10
+                             transition-all duration-200 shadow-sm"
                 >
                   <Icon className="w-4 h-4" />
                 </a>
@@ -100,7 +107,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-sm font-semibold text-white uppercase tracking-widest mb-5">
+            <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-5">
               Quick Links
             </h4>
             <ul className="space-y-2.5">
@@ -108,7 +115,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-surface-400 hover:text-primary-400 transition-colors flex items-center gap-1.5 group"
+                    className="text-sm text-zinc-300 hover:text-primary-400 transition-colors flex items-center gap-1.5 group"
                   >
                     <span className="w-0 group-hover:w-3 h-px bg-primary-500 transition-all duration-200" />
                     {link.label}
@@ -120,14 +127,14 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h4 className="text-sm font-semibold text-white uppercase tracking-widest mb-5">
+            <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-5">
               Services
             </h4>
             <ul className="space-y-2.5">
               {serviceList.map((svc) => (
                 <li key={svc}>
-                  <span className="text-sm text-surface-400 flex items-center gap-1.5 group">
-                    <span className="w-1.5 h-1.5 rounded-full bg-dark-600 group-hover:bg-primary-500 transition-colors" />
+                  <span className="text-sm text-zinc-300 flex items-center gap-2 group">
+                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-600 group-hover:bg-primary-500 transition-colors" />
                     {svc}
                   </span>
                 </li>
@@ -137,23 +144,23 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-sm font-semibold text-white uppercase tracking-widest mb-5">
+            <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-5">
               Contact
             </h4>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <Mail className="w-4 h-4 text-primary-500 mt-0.5 shrink-0" />
-                <a href={`mailto:${COMPANY_INFO.email}`} className="text-sm text-surface-400 hover:text-primary-400 transition-colors">
+                <a href={`mailto:${COMPANY_INFO.email}`} className="text-sm text-zinc-300 hover:text-white transition-colors">
                   {COMPANY_INFO.email}
                 </a>
               </li>
               <li className="flex items-start gap-3">
                 <Phone className="w-4 h-4 text-primary-500 mt-0.5 shrink-0" />
-                <span className="text-sm text-surface-400">{COMPANY_INFO.phone}</span>
+                <span className="text-sm text-zinc-300">{COMPANY_INFO.phone}</span>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-primary-500 mt-0.5 shrink-0" />
-                <span className="text-sm text-surface-400">{COMPANY_INFO.address}</span>
+                <span className="text-sm text-zinc-300">{COMPANY_INFO.address}</span>
               </li>
             </ul>
           </div>
@@ -161,22 +168,22 @@ export default function Footer() {
       </div>
 
       {/* Divider */}
-      <div className="glow-line" />
+      <div className="h-px bg-zinc-800/80" />
 
       {/* Bottom bar */}
-      <div className="container-custom py-5">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-surface-500">
+      <div className="container-custom py-6 relative z-10">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-400">
           <p>&copy; {year} {COMPANY_INFO.name}. All rights reserved.</p>
 
           <div className="flex items-center gap-6">
-            <Link href="/privacy" className="hover:text-surface-300 transition-colors">Privacy Policy</Link>
-            <Link href="/terms"   className="hover:text-surface-300 transition-colors">Terms of Service</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms"   className="hover:text-white transition-colors">Terms of Service</Link>
 
-            {/* Admin login — small subtle icon link */}
+            {/* Admin login */}
             <Link
               href="/admin/login"
               title="Admin"
-              className="inline-flex items-center gap-1 text-dark-600 hover:text-primary-500/70 transition-colors duration-200 group"
+              className="inline-flex items-center gap-1 text-zinc-500 hover:text-primary-400 transition-colors duration-200 group"
             >
               <Settings className="w-3 h-3 group-hover:rotate-45 transition-transform duration-300" />
               <span className="sr-only">Admin Login</span>

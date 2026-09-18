@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Eye, Lock, FileText, CheckCircle, ArrowRight, Mail, Phone, MapPin } from 'lucide-react';
+import SEO from '@/components/common/SEO';
 import { COMPANY_INFO } from '@/lib/constants';
 
 const sections = [
@@ -55,12 +56,17 @@ export default function PrivacyPage() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: '#0d0b09' }}>
+    <div className="min-h-screen bg-white">
+      <SEO
+        title="Privacy Policy — DevSpark"
+        description="Review DevSpark's privacy policy, data practices, security commitments, and information usage guidelines."
+        url="https://devspark.com/privacy"
+      />
       {/* Hero Banner */}
-      <section className="relative py-20 overflow-hidden">
+      <section className="relative py-10 md:py-14 overflow-hidden border-b border-slate-100">
         <div 
           className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(249,115,22,0.12) 0%, transparent 65%)' }} 
+          style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(249,115,22,0.07) 0%, transparent 70%)' }} 
         />
         <div className="container-custom text-center relative z-10">
           <motion.div
@@ -68,9 +74,11 @@ export default function PrivacyPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="section-label">Trust & Security</span>
-            <h1 className="heading-xl text-white mt-4 mb-4">Privacy Policy</h1>
-            <p className="text-surface-400 text-sm max-w-lg mx-auto">
+            <div className="flex justify-center mb-1">
+              <span className="section-label">Trust & Security</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display tracking-tight text-slate-900 mt-3 mb-2">Privacy Policy</h1>
+            <p className="text-slate-600 text-sm max-w-lg mx-auto">
               Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
             </p>
           </motion.div>
@@ -78,14 +86,14 @@ export default function PrivacyPage() {
       </section>
 
       {/* Main Content Layout */}
-      <section className="pb-24">
+      <section className="py-16">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             
             {/* Sticky Table of Contents Sidebar */}
             <div className="lg:col-span-4 sticky top-28 hidden lg:block">
-              <div className="card-dark p-6 rounded-2xl border border-dark-700/60 bg-dark-900/40 backdrop-blur-sm">
-                <h3 className="text-xs font-semibold text-white uppercase tracking-widest mb-6">
+              <div className="p-6 rounded-2xl border border-[#f0eae1] bg-[#faf8f5] shadow-sm">
+                <h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest mb-6">
                   Table of Contents
                 </h3>
                 <nav className="space-y-1">
@@ -98,11 +106,11 @@ export default function PrivacyPage() {
                         onClick={() => scrollToSection(section.id)}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm transition-all duration-200 ${
                           isActive
-                            ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20 font-medium'
-                            : 'text-surface-400 hover:text-white hover:bg-dark-800/40 border border-transparent'
+                            ? 'bg-orange-50 text-orange-600 border border-orange-200 font-semibold shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900 hover:bg-white border border-transparent'
                         }`}
                       >
-                        <Icon className={`w-4 h-4 shrink-0 transition-colors ${isActive ? 'text-primary-400' : 'text-surface-500'}`} />
+                        <Icon className={`w-4 h-4 shrink-0 transition-colors ${isActive ? 'text-orange-500' : 'text-slate-400'}`} />
                         <span>{section.label}</span>
                       </button>
                     );
@@ -116,10 +124,10 @@ export default function PrivacyPage() {
               
               {/* Introduction */}
               <div id="introduction" className="scroll-mt-28 space-y-4">
-                <h2 className="text-2xl font-display font-semibold text-white flex items-center gap-2">
-                  <span className="text-primary-400">01.</span> Introduction
+                <h2 className="text-2xl font-display font-bold text-slate-900 flex items-center gap-2">
+                  <span className="text-primary-600">01.</span> Introduction
                 </h2>
-                <div className="text-surface-400 space-y-4 leading-relaxed text-base">
+                <div className="text-slate-600 space-y-4 leading-relaxed text-base">
                   <p>
                     Welcome to <strong>{COMPANY_INFO.name}</strong>. We value your trust and are committed to protecting your personal information and privacy rights. This Privacy Policy describes how we collect, use, disclose, and safeguard your data when you visit our website or use our software development and consulting services.
                   </p>
@@ -131,23 +139,23 @@ export default function PrivacyPage() {
 
               {/* Information We Collect */}
               <div id="information-collect" className="scroll-mt-28 space-y-4">
-                <div className="glow-line my-4 opacity-40" />
-                <h2 className="text-2xl font-display font-semibold text-white flex items-center gap-2">
-                  <span className="text-primary-400">02.</span> Information We Collect
+                <div className="w-full h-px bg-slate-200 my-4" />
+                <h2 className="text-2xl font-display font-bold text-slate-900 flex items-center gap-2">
+                  <span className="text-primary-600">02.</span> Information We Collect
                 </h2>
-                <div className="text-surface-400 space-y-4 leading-relaxed text-base">
+                <div className="text-slate-600 space-y-4 leading-relaxed text-base">
                   <p>
                     We collect information that you provide directly to us or that is automatically generated during your interaction with our site and services. This includes:
                   </p>
-                  <ul className="list-disc pl-6 space-y-2 text-surface-400">
+                  <ul className="list-disc pl-6 space-y-2 text-slate-600">
                     <li>
-                      <strong>Personal Identifiers:</strong> Name, email address, phone number, physical address, and billing information when you contact us or contract our services.
+                      <strong className="text-slate-900">Personal Identifiers:</strong> Name, email address, phone number, physical address, and billing information when you contact us or contract our services.
                     </li>
                     <li>
-                      <strong>Professional Details:</strong> Company name, job title, and project requirements that you share via our contact or request-for-proposal forms.
+                      <strong className="text-slate-900">Professional Details:</strong> Company name, job title, and project requirements that you share via our contact or request-for-proposal forms.
                     </li>
                     <li>
-                      <strong>Usage and Device Information:</strong> IP address, browser type, operating system, page views, and access times automatically collected through cookies and tracking tools.
+                      <strong className="text-slate-900">Usage and Device Information:</strong> IP address, browser type, operating system, page views, and access times automatically collected through cookies and tracking tools.
                     </li>
                   </ul>
                 </div>
@@ -155,15 +163,15 @@ export default function PrivacyPage() {
 
               {/* How We Use Information */}
               <div id="how-use" className="scroll-mt-28 space-y-4">
-                <div className="glow-line my-4 opacity-40" />
-                <h2 className="text-2xl font-display font-semibold text-white flex items-center gap-2">
-                  <span className="text-primary-400">03.</span> How We Use Information
+                <div className="w-full h-px bg-slate-200 my-4" />
+                <h2 className="text-2xl font-display font-bold text-slate-900 flex items-center gap-2">
+                  <span className="text-primary-600">03.</span> How We Use Information
                 </h2>
-                <div className="text-surface-400 space-y-4 leading-relaxed text-base">
+                <div className="text-slate-600 space-y-4 leading-relaxed text-base">
                   <p>
                     We use the collected information for various professional purposes:
                   </p>
-                  <ul className="list-disc pl-6 space-y-2 text-surface-400">
+                  <ul className="list-disc pl-6 space-y-2 text-slate-600">
                     <li>To deliver, maintain, and optimize our software engineering and design services.</li>
                     <li>To manage client relationships, handle invoicing, and respond to project inquiries.</li>
                     <li>To send administrative information, update alerts, and occasional promotional communications.</li>
@@ -175,23 +183,23 @@ export default function PrivacyPage() {
 
               {/* Information Sharing */}
               <div id="sharing" className="scroll-mt-28 space-y-4">
-                <div className="glow-line my-4 opacity-40" />
-                <h2 className="text-2xl font-display font-semibold text-white flex items-center gap-2">
-                  <span className="text-primary-400">04.</span> Information Sharing
+                <div className="w-full h-px bg-slate-200 my-4" />
+                <h2 className="text-2xl font-display font-bold text-slate-900 flex items-center gap-2">
+                  <span className="text-primary-600">04.</span> Information Sharing
                 </h2>
-                <div className="text-surface-400 space-y-4 leading-relaxed text-base">
+                <div className="text-slate-600 space-y-4 leading-relaxed text-base">
                   <p>
                     We do not sell, rent, or trade your personal information. We may share information under these limited circumstances:
                   </p>
-                  <ul className="list-disc pl-6 space-y-2 text-surface-400">
+                  <ul className="list-disc pl-6 space-y-2 text-slate-600">
                     <li>
-                      <strong>Service Providers:</strong> With trusted contractors or third-party vendors who assist in hosting, database management, and operational tool services under strict confidentiality agreements.
+                      <strong className="text-slate-900">Service Providers:</strong> With trusted contractors or third-party vendors who assist in hosting, database management, and operational tool services under strict confidentiality agreements.
                     </li>
                     <li>
-                      <strong>Legal Compliance:</strong> When required by law, subpoena, or government authority to protect legal rights or ensure safety.
+                      <strong className="text-slate-900">Legal Compliance:</strong> When required by law, subpoena, or government authority to protect legal rights or ensure safety.
                     </li>
                     <li>
-                      <strong>Business Transfers:</strong> In connection with any merger, acquisition, or asset sale, subject to transfer of privacy commitments.
+                      <strong className="text-slate-900">Business Transfers:</strong> In connection with any merger, acquisition, or asset sale, subject to transfer of privacy commitments.
                     </li>
                   </ul>
                 </div>
@@ -199,11 +207,11 @@ export default function PrivacyPage() {
 
               {/* Data Security */}
               <div id="security" className="scroll-mt-28 space-y-4">
-                <div className="glow-line my-4 opacity-40" />
-                <h2 className="text-2xl font-display font-semibold text-white flex items-center gap-2">
-                  <span className="text-primary-400">05.</span> Data Security
+                <div className="w-full h-px bg-slate-200 my-4" />
+                <h2 className="text-2xl font-display font-bold text-slate-900 flex items-center gap-2">
+                  <span className="text-primary-600">05.</span> Data Security
                 </h2>
-                <div className="text-surface-400 space-y-4 leading-relaxed text-base">
+                <div className="text-slate-600 space-y-4 leading-relaxed text-base">
                   <p>
                     We implement industry-standard administrative, physical, and technical security measures (such as SSL encryption, firewalls, and secure access protocols) to defend your personal data from unauthorized access, alteration, or disclosure.
                   </p>
@@ -215,39 +223,39 @@ export default function PrivacyPage() {
 
               {/* Your Rights & Choices */}
               <div id="rights" className="scroll-mt-28 space-y-4">
-                <div className="glow-line my-4 opacity-40" />
-                <h2 className="text-2xl font-display font-semibold text-white flex items-center gap-2">
-                  <span className="text-primary-400">06.</span> Your Rights & Choices
+                <div className="w-full h-px bg-slate-200 my-4" />
+                <h2 className="text-2xl font-display font-bold text-slate-900 flex items-center gap-2">
+                  <span className="text-primary-600">06.</span> Your Rights & Choices
                 </h2>
-                <div className="text-surface-400 space-y-4 leading-relaxed text-base">
+                <div className="text-slate-600 space-y-4 leading-relaxed text-base">
                   <p>
                     Depending on your location, you may have specific rights regarding your personal information:
                   </p>
-                  <ul className="list-disc pl-6 space-y-2 text-surface-400">
-                    <li><strong>Access & Correction:</strong> The right to request access to or correct your personal data.</li>
-                    <li><strong>Deletion:</strong> The right to request that we delete your personal information, subject to certain legal exceptions.</li>
-                    <li><strong>Opt-Out:</strong> The right to opt-out of marketing emails at any time by clicking the "Unsubscribe" link in the footer of our newsletters.</li>
-                    <li><strong>Cookie Preferences:</strong> You can manage cookie settings directly through your browser configuration.</li>
+                  <ul className="list-disc pl-6 space-y-2 text-slate-600">
+                    <li><strong className="text-slate-900">Access & Correction:</strong> The right to request access to or correct your personal data.</li>
+                    <li><strong className="text-slate-900">Deletion:</strong> The right to request that we delete your personal information, subject to certain legal exceptions.</li>
+                    <li><strong className="text-slate-900">Opt-Out:</strong> The right to opt-out of marketing emails at any time by clicking the "Unsubscribe" link in the footer of our newsletters.</li>
+                    <li><strong className="text-slate-900">Cookie Preferences:</strong> You can manage cookie settings directly through your browser configuration.</li>
                   </ul>
                 </div>
               </div>
 
               {/* Contact Us */}
               <div id="contact" className="scroll-mt-28 space-y-4">
-                <div className="glow-line my-4 opacity-40" />
-                <h2 className="text-2xl font-display font-semibold text-white flex items-center gap-2">
-                  <span className="text-primary-400">07.</span> Contact Us
+                <div className="w-full h-px bg-slate-200 my-4" />
+                <h2 className="text-2xl font-display font-bold text-slate-900 flex items-center gap-2">
+                  <span className="text-primary-600">07.</span> Contact Us
                 </h2>
-                <div className="text-surface-400 space-y-4 leading-relaxed text-base">
+                <div className="text-slate-600 space-y-4 leading-relaxed text-base">
                   <p>
                     If you have questions, comments, or concerns about this Privacy Policy or our data practices, please reach out to us at:
                   </p>
-                  <div className="card-dark p-6 rounded-2xl border border-dark-700/60 grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
+                  <div className="bg-[#faf8f5] p-6 rounded-2xl border border-[#f0eae1] grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
                     <div className="flex items-start gap-3">
                       <Mail className="w-5 h-5 text-primary-500 shrink-0 mt-0.5" />
                       <div>
-                        <div className="text-xs font-semibold text-white uppercase tracking-wider mb-1">Email</div>
-                        <a href={`mailto:${COMPANY_INFO.email}`} className="text-sm text-surface-400 hover:text-primary-400 transition-colors break-all">
+                        <div className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-1">Email</div>
+                        <a href={`mailto:${COMPANY_INFO.email}`} className="text-sm text-slate-600 hover:text-primary-600 transition-colors break-all">
                           {COMPANY_INFO.email}
                         </a>
                       </div>
@@ -255,15 +263,15 @@ export default function PrivacyPage() {
                     <div className="flex items-start gap-3">
                       <Phone className="w-5 h-5 text-primary-500 shrink-0 mt-0.5" />
                       <div>
-                        <div className="text-xs font-semibold text-white uppercase tracking-wider mb-1">Phone</div>
-                        <span className="text-sm text-surface-400">{COMPANY_INFO.phone}</span>
+                        <div className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-1">Phone</div>
+                        <span className="text-sm text-slate-600">{COMPANY_INFO.phone}</span>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
                       <MapPin className="w-5 h-5 text-primary-500 shrink-0 mt-0.5" />
                       <div>
-                        <div className="text-xs font-semibold text-white uppercase tracking-wider mb-1">Office</div>
-                        <span className="text-sm text-surface-400">{COMPANY_INFO.address}</span>
+                        <div className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-1">Office</div>
+                        <span className="text-sm text-slate-600">{COMPANY_INFO.address}</span>
                       </div>
                     </div>
                   </div>

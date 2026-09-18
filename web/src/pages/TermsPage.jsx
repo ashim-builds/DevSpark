@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, Award, UserCheck, AlertTriangle, ShieldCheck, HelpCircle, Scale, Mail, Phone, MapPin } from 'lucide-react';
+import SEO from '@/components/common/SEO';
 import { COMPANY_INFO } from '@/lib/constants';
 
 const sections = [
@@ -56,12 +57,17 @@ export default function TermsPage() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: '#0d0b09' }}>
+    <div className="min-h-screen bg-white">
+      <SEO
+        title="Terms of Service — DevSpark"
+        description="Read DevSpark's terms of service, legal agreements, intellectual property guidelines, and user conditions."
+        url="https://devspark.com/terms"
+      />
       {/* Hero Banner */}
-      <section className="relative py-20 overflow-hidden">
+      <section className="relative py-10 md:py-14 overflow-hidden border-b border-slate-100">
         <div 
           className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(249,115,22,0.12) 0%, transparent 65%)' }} 
+          style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(249,115,22,0.07) 0%, transparent 70%)' }} 
         />
         <div className="container-custom text-center relative z-10">
           <motion.div
@@ -69,9 +75,11 @@ export default function TermsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="section-label">Legal Agreement</span>
-            <h1 className="heading-xl text-white mt-4 mb-4">Terms of Service</h1>
-            <p className="text-surface-400 text-sm max-w-lg mx-auto">
+            <div className="flex justify-center mb-1">
+              <span className="section-label">Legal Agreement</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display tracking-tight text-slate-900 mt-3 mb-2">Terms of Service</h1>
+            <p className="text-slate-600 text-sm max-w-lg mx-auto">
               Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
             </p>
           </motion.div>
@@ -79,14 +87,14 @@ export default function TermsPage() {
       </section>
 
       {/* Main Content Layout */}
-      <section className="pb-24">
+      <section className="py-16">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             
             {/* Sticky Table of Contents Sidebar */}
             <div className="lg:col-span-4 sticky top-28 hidden lg:block">
-              <div className="card-dark p-6 rounded-2xl border border-dark-700/60 bg-dark-900/40 backdrop-blur-sm">
-                <h3 className="text-xs font-semibold text-white uppercase tracking-widest mb-6">
+              <div className="p-6 rounded-2xl border border-[#f0eae1] bg-[#faf8f5] shadow-sm">
+                <h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest mb-6">
                   Table of Contents
                 </h3>
                 <nav className="space-y-1">
@@ -99,11 +107,11 @@ export default function TermsPage() {
                         onClick={() => scrollToSection(section.id)}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm transition-all duration-200 ${
                           isActive
-                            ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20 font-medium'
-                            : 'text-surface-400 hover:text-white hover:bg-dark-800/40 border border-transparent'
+                            ? 'bg-orange-50 text-orange-600 border border-orange-200 font-semibold shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900 hover:bg-white border border-transparent'
                         }`}
                       >
-                        <Icon className={`w-4 h-4 shrink-0 transition-colors ${isActive ? 'text-primary-400' : 'text-surface-500'}`} />
+                        <Icon className={`w-4 h-4 shrink-0 transition-colors ${isActive ? 'text-orange-500' : 'text-slate-400'}`} />
                         <span>{section.label}</span>
                       </button>
                     );
@@ -117,10 +125,10 @@ export default function TermsPage() {
               
               {/* Agreement */}
               <div id="agreement" className="scroll-mt-28 space-y-4">
-                <h2 className="text-2xl font-display font-semibold text-white flex items-center gap-2">
-                  <span className="text-primary-400">01.</span> Agreement to Terms
+                <h2 className="text-2xl font-display font-bold text-slate-900 flex items-center gap-2">
+                  <span className="text-primary-600">01.</span> Agreement to Terms
                 </h2>
-                <div className="text-surface-400 space-y-4 leading-relaxed text-base">
+                <div className="text-slate-600 space-y-4 leading-relaxed text-base">
                   <p>
                     These Terms of Service constitute a legally binding agreement made between you, whether personally or on behalf of an entity (“you”) and <strong>{COMPANY_INFO.name}</strong> (“we,” “us,” or “our”), concerning your access to and use of our website as well as any other media form, media channel, mobile website, or related software development, design, and consulting services.
                   </p>
@@ -132,11 +140,11 @@ export default function TermsPage() {
 
               {/* Intellectual Property */}
               <div id="intellectual-property" className="scroll-mt-28 space-y-4">
-                <div className="glow-line my-4 opacity-40" />
-                <h2 className="text-2xl font-display font-semibold text-white flex items-center gap-2">
-                  <span className="text-primary-400">02.</span> Intellectual Property Rights
+                <div className="w-full h-px bg-slate-200 my-4" />
+                <h2 className="text-2xl font-display font-bold text-slate-900 flex items-center gap-2">
+                  <span className="text-primary-600">02.</span> Intellectual Property Rights
                 </h2>
-                <div className="text-surface-400 space-y-4 leading-relaxed text-base">
+                <div className="text-slate-600 space-y-4 leading-relaxed text-base">
                   <p>
                     Unless otherwise indicated, the website and all of its content, including source code, databases, functionality, software, website designs, audio, video, text, photographs, and graphics, as well as the trademarks, service marks, and logos contained therein, are owned or controlled by us or licensed to us, and are protected by copyright and trademark laws.
                   </p>
@@ -148,15 +156,15 @@ export default function TermsPage() {
 
               {/* User Representations */}
               <div id="representations" className="scroll-mt-28 space-y-4">
-                <div className="glow-line my-4 opacity-40" />
-                <h2 className="text-2xl font-display font-semibold text-white flex items-center gap-2">
-                  <span className="text-primary-400">03.</span> User Representations
+                <div className="w-full h-px bg-slate-200 my-4" />
+                <h2 className="text-2xl font-display font-bold text-slate-900 flex items-center gap-2">
+                  <span className="text-primary-600">03.</span> User Representations
                 </h2>
-                <div className="text-surface-400 space-y-4 leading-relaxed text-base">
+                <div className="text-slate-600 space-y-4 leading-relaxed text-base">
                   <p>
                     By using the website and our services, you represent and warrant that:
                   </p>
-                  <ul className="list-disc pl-6 space-y-2 text-surface-400">
+                  <ul className="list-disc pl-6 space-y-2 text-slate-600">
                     <li>All registration and contact information you submit will be true, accurate, current, and complete.</li>
                     <li>You will maintain the accuracy of such information and promptly update it as necessary.</li>
                     <li>You have the legal capacity and you agree to comply with these Terms of Service.</li>
@@ -168,15 +176,15 @@ export default function TermsPage() {
 
               {/* Prohibited Activities */}
               <div id="prohibited-activities" className="scroll-mt-28 space-y-4">
-                <div className="glow-line my-4 opacity-40" />
-                <h2 className="text-2xl font-display font-semibold text-white flex items-center gap-2">
-                  <span className="text-primary-400">04.</span> Prohibited Activities
+                <div className="w-full h-px bg-slate-200 my-4" />
+                <h2 className="text-2xl font-display font-bold text-slate-900 flex items-center gap-2">
+                  <span className="text-primary-600">04.</span> Prohibited Activities
                 </h2>
-                <div className="text-surface-400 space-y-4 leading-relaxed text-base">
+                <div className="text-slate-600 space-y-4 leading-relaxed text-base">
                   <p>
                     You may not access or use the website or services for any purpose other than that for which we make them available. Prohibited activities include:
                   </p>
-                  <ul className="list-disc pl-6 space-y-2 text-surface-400">
+                  <ul className="list-disc pl-6 space-y-2 text-slate-600">
                     <li>Systematically retrieving data or other content from the website to create or compile, directly or indirectly, a collection, compilation, database, or directory without written permission from us.</li>
                     <li>Circumventing, disabling, or otherwise interfering with security-related features of the website.</li>
                     <li>Engaging in unauthorized framing of or linking to the website.</li>
@@ -188,11 +196,11 @@ export default function TermsPage() {
 
               {/* Services & Billing */}
               <div id="billing" className="scroll-mt-28 space-y-4">
-                <div className="glow-line my-4 opacity-40" />
-                <h2 className="text-2xl font-display font-semibold text-white flex items-center gap-2">
-                  <span className="text-primary-400">05.</span> Services & Billing
+                <div className="w-full h-px bg-slate-200 my-4" />
+                <h2 className="text-2xl font-display font-bold text-slate-900 flex items-center gap-2">
+                  <span className="text-primary-600">05.</span> Services & Billing
                 </h2>
-                <div className="text-surface-400 space-y-4 leading-relaxed text-base">
+                <div className="text-slate-600 space-y-4 leading-relaxed text-base">
                   <p>
                     For custom software engineering, consulting, and design services, specific statements of work (SOW) or service agreements will govern payment, milestones, timelines, and delivery.
                   </p>
@@ -204,11 +212,11 @@ export default function TermsPage() {
 
               {/* Limitation of Liability */}
               <div id="liability" className="scroll-mt-28 space-y-4">
-                <div className="glow-line my-4 opacity-40" />
-                <h2 className="text-2xl font-display font-semibold text-white flex items-center gap-2">
-                  <span className="text-primary-400">06.</span> Limitation of Liability
+                <div className="w-full h-px bg-slate-200 my-4" />
+                <h2 className="text-2xl font-display font-bold text-slate-900 flex items-center gap-2">
+                  <span className="text-primary-600">06.</span> Limitation of Liability
                 </h2>
-                <div className="text-surface-400 space-y-4 leading-relaxed text-base">
+                <div className="text-slate-600 space-y-4 leading-relaxed text-base">
                   <p>
                     In no event will we or our directors, employees, or agents be liable to you or any third party for any direct, indirect, consequential, exemplary, incidental, special, or punitive damages, including lost profit, lost revenue, loss of data, or other damages arising from your use of the website or services, even if we have been advised of the possibility of such damages.
                   </p>
@@ -220,11 +228,11 @@ export default function TermsPage() {
 
               {/* Governing Law */}
               <div id="governing-law" className="scroll-mt-28 space-y-4">
-                <div className="glow-line my-4 opacity-40" />
-                <h2 className="text-2xl font-display font-semibold text-white flex items-center gap-2">
-                  <span className="text-primary-400">07.</span> Governing Law
+                <div className="w-full h-px bg-slate-200 my-4" />
+                <h2 className="text-2xl font-display font-bold text-slate-900 flex items-center gap-2">
+                  <span className="text-primary-600">07.</span> Governing Law
                 </h2>
-                <div className="text-surface-400 space-y-4 leading-relaxed text-base">
+                <div className="text-slate-600 space-y-4 leading-relaxed text-base">
                   <p>
                     These Terms of Service and your use of the website and services are governed by and construed in accordance with the laws of Nepal, without regard to its conflict of law principles. Any legal action or proceeding arising under these Terms will be subject to the exclusive jurisdiction of the courts located in Kaski, Nepal.
                   </p>
@@ -233,20 +241,20 @@ export default function TermsPage() {
 
               {/* Contact Us */}
               <div id="contact" className="scroll-mt-28 space-y-4">
-                <div className="glow-line my-4 opacity-40" />
-                <h2 className="text-2xl font-display font-semibold text-white flex items-center gap-2">
-                  <span className="text-primary-400">08.</span> Contact Us
+                <div className="w-full h-px bg-slate-200 my-4" />
+                <h2 className="text-2xl font-display font-bold text-slate-900 flex items-center gap-2">
+                  <span className="text-primary-600">08.</span> Contact Us
                 </h2>
-                <div className="text-surface-400 space-y-4 leading-relaxed text-base">
+                <div className="text-slate-600 space-y-4 leading-relaxed text-base">
                   <p>
                     In order to resolve a complaint regarding the website or services, or to receive further information regarding use of the services, please contact us at:
                   </p>
-                  <div className="card-dark p-6 rounded-2xl border border-dark-700/60 grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
+                  <div className="bg-[#faf8f5] p-6 rounded-2xl border border-[#f0eae1] grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
                     <div className="flex items-start gap-3">
                       <Mail className="w-5 h-5 text-primary-500 shrink-0 mt-0.5" />
                       <div>
-                        <div className="text-xs font-semibold text-white uppercase tracking-wider mb-1">Email</div>
-                        <a href={`mailto:${COMPANY_INFO.email}`} className="text-sm text-surface-400 hover:text-primary-400 transition-colors break-all">
+                        <div className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-1">Email</div>
+                        <a href={`mailto:${COMPANY_INFO.email}`} className="text-sm text-slate-600 hover:text-primary-600 transition-colors break-all">
                           {COMPANY_INFO.email}
                         </a>
                       </div>
@@ -254,15 +262,15 @@ export default function TermsPage() {
                     <div className="flex items-start gap-3">
                       <Phone className="w-5 h-5 text-primary-500 shrink-0 mt-0.5" />
                       <div>
-                        <div className="text-xs font-semibold text-white uppercase tracking-wider mb-1">Phone</div>
-                        <span className="text-sm text-surface-400">{COMPANY_INFO.phone}</span>
+                        <div className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-1">Phone</div>
+                        <span className="text-sm text-slate-600">{COMPANY_INFO.phone}</span>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
                       <MapPin className="w-5 h-5 text-primary-500 shrink-0 mt-0.5" />
                       <div>
-                        <div className="text-xs font-semibold text-white uppercase tracking-wider mb-1">Office</div>
-                        <span className="text-sm text-surface-400">{COMPANY_INFO.address}</span>
+                        <div className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-1">Office</div>
+                        <span className="text-sm text-slate-600">{COMPANY_INFO.address}</span>
                       </div>
                     </div>
                   </div>
