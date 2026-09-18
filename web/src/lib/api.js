@@ -1,8 +1,12 @@
-const API_BASE =
-  import.meta.env.VITE_API_URL ||
-  import.meta.env.NEXT_PUBLIC_API_URL ||
-  (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL) ||
-  'http://localhost:5000/api';
+const API_BASE = (() => {
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  if (typeof window !== 'undefined') {
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      return '/api';
+    }
+  }
+  return 'http://localhost:5000/api';
+})();
 
 function getAuthToken() {
   if (typeof window !== 'undefined') {
@@ -13,7 +17,10 @@ function getAuthToken() {
 
 async function fetchAPI(endpoint, options = {}) {
   const token = getAuthToken();
-  const url = `${API_BASE}${endpoint}`;
+  const cleanBase = (API_BASE || '').replace(/\/$/, '');
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const url = `${cleanBase}${cleanEndpoint}`;
+
   const config = {
     ...options,
     headers: {
@@ -28,7 +35,13 @@ async function fetchAPI(endpoint, options = {}) {
   }
 
   const response = await fetch(url, config);
-  const data = await response.json();
+  const text = await response.text();
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (parseErr) {
+    throw new Error(`Server returned non-JSON response (${response.status})`);
+  }
 
   if (!response.ok) {
     throw new Error(data.message || 'API request failed');

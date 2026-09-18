@@ -2,6 +2,9 @@
   RewriteEngine On
   RewriteBase /
 
+  # Do NOT rewrite /api requests - let Passenger / Node.js backend handle them
+  RewriteRule ^api(/.*)?$ - [L]
+
   # Handle React SPA routing - route everything to index.html if file/dir doesn't exist
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
