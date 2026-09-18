@@ -26,7 +26,15 @@ app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps or curl)
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin) return callback(null, true);
+
+      const isAllowed =
+        allowedOrigins.includes(origin) ||
+        origin.includes("rjflowers.com") ||
+        origin.includes("devsparkco.com") ||
+        origin.includes("localhost");
+
+      if (isAllowed) {
         callback(null, true);
       } else {
         callback(new Error(`Origin ${origin} not allowed by CORS`));
@@ -43,21 +51,30 @@ initDBWithRetry().catch((err) => {
   console.error("MySQL initialization error:", err.message);
 });
 
-// Routes
-app.use("/api/auth", require("./routes/auth"));
-app.use("/api/projects", require("./routes/projects"));
-app.use("/api/services", require("./routes/services"));
-app.use("/api/team", require("./routes/team"));
-app.use("/api/testimonials", require("./routes/testimonials"));
-app.use("/api/contact", require("./routes/contact"));
-app.use("/api/dashboard", require("./routes/dashboard"));
-app.use("/api/images", require("./routes/images"));
-app.use("/api/settings", require("./routes/settings"));
+// API Routes & Health
+const apiRouter = express.Router();
 
-// Health check
-app.get("/api/health", (req, res) => {
+apiRouter.get("/health", (req, res) => {
   res.json({ status: "ok", database: "mysql", timestamp: new Date().toISOString() });
 });
+
+apiRouter.get("/", (req, res) => {
+  res.json({ status: "ok", message: "DevSpark Backend API is live", timestamp: new Date().toISOString() });
+});
+
+apiRouter.use("/auth", require("./routes/auth"));
+apiRouter.use("/projects", require("./routes/projects"));
+apiRouter.use("/services", require("./routes/services"));
+apiRouter.use("/team", require("./routes/team"));
+apiRouter.use("/testimonials", require("./routes/testimonials"));
+apiRouter.use("/contact", require("./routes/contact"));
+apiRouter.use("/dashboard", require("./routes/dashboard"));
+apiRouter.use("/images", require("./routes/images"));
+apiRouter.use("/settings", require("./routes/settings"));
+
+// Mount on both /api and / so it works with any cPanel subpath or root mapping
+app.use("/api", apiRouter);
+app.use("/", apiRouter);
 
 // Error handler
 app.use((err, req, res, next) => {

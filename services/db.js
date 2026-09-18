@@ -1,30 +1,32 @@
 const mysql = require('mysql2/promise');
 
-// Parse database connection exclusively from DATABASE_URL
-const rawUri = process.env.DATABASE_URL || process.env.DB_URL || process.env.MYSQL_URL || 'mysql://root:devspark_root_secret@localhost:3306/devspark';
+// Parse database connection from DATABASE_URL or individual env vars
+const rawUri = process.env.DATABASE_URL || process.env.DB_URL || process.env.MYSQL_URL;
 
 const dbConfig = {
-  host: 'localhost',
-  port: 3306,
-  user: 'root',
-  password: 'devspark_root_secret',
-  database: 'devspark',
+  host: process.env.DB_HOST || 'localhost',
+  port: parseInt(process.env.DB_PORT || '3306', 10),
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD !== undefined ? process.env.DB_PASSWORD : 'devspark_root_secret',
+  database: process.env.DB_NAME || 'devspark',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
 };
 
-try {
-  const parsed = new URL(rawUri);
-  if (parsed.hostname) dbConfig.host = parsed.hostname;
-  if (parsed.port) dbConfig.port = parseInt(parsed.port, 10);
-  if (parsed.username) dbConfig.user = decodeURIComponent(parsed.username);
-  if (parsed.password !== undefined) dbConfig.password = decodeURIComponent(parsed.password);
-  if (parsed.pathname && parsed.pathname.length > 1) {
-    dbConfig.database = decodeURIComponent(parsed.pathname.slice(1));
+if (rawUri) {
+  try {
+    const parsed = new URL(rawUri);
+    if (parsed.hostname) dbConfig.host = parsed.hostname;
+    if (parsed.port) dbConfig.port = parseInt(parsed.port, 10);
+    if (parsed.username) dbConfig.user = decodeURIComponent(parsed.username);
+    if (parsed.password !== undefined) dbConfig.password = decodeURIComponent(parsed.password);
+    if (parsed.pathname && parsed.pathname.length > 1) {
+      dbConfig.database = decodeURIComponent(parsed.pathname.slice(1));
+    }
+  } catch (err) {
+    console.warn('Warning: Could not parse DATABASE_URL, using default configuration:', err.message);
   }
-} catch (err) {
-  console.warn('Warning: Could not parse DATABASE_URL, using default configuration:', err.message);
 }
 
 let pool = null;
