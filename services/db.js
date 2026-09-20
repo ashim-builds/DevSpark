@@ -12,6 +12,8 @@ const dbConfig = {
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
+  connectTimeout: 10000,
+  ...(process.env.DB_SSL === 'true' ? { ssl: { rejectUnauthorized: false } } : {}),
 };
 
 if (rawUri) {
@@ -44,24 +46,7 @@ async function query(sql, params) {
 }
 
 async function initDB() {
-  // 1. Ensure the database exists by connecting without DB specified first
-  try {
-    const rootConnection = await mysql.createConnection({
-      host: dbConfig.host,
-      port: dbConfig.port,
-      user: dbConfig.user,
-      password: dbConfig.password,
-    });
-
-    await rootConnection.query(
-      `CREATE DATABASE IF NOT EXISTS \`${dbConfig.database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
-    );
-    await rootConnection.end();
-  } catch (err) {
-    console.warn('Notice: Could not run initial CREATE DATABASE check (may require pre-created DB or permissions):', err.message);
-  }
-
-  // 2. Connect pool to the database
+  // Connect pool directly to the configured database
   const connectionPool = getPool();
 
   // 3. Create required tables
@@ -233,15 +218,16 @@ async function initDB() {
   console.log(`Connected to MySQL database [${dbConfig.database}] at ${dbConfig.host}:${dbConfig.port}`);
 }
 
-async function initDBWithRetry(retries = 15, delay = 2000) {
+async function initDBWithRetry(retries = process.env.VERCEL ? 2 : 10, delay = 1500) {
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       await initDB();
       return;
     } catch (err) {
-      console.warn(`[MySQL] Connection attempt ${attempt}/${retries} failed: ${err.message}. Retrying in ${delay}ms...`);
+      console.warn(`[MySQL] Connection attempt ${attempt}/${retries} failed: ${err.message}`);
       if (attempt === retries) {
-        throw new Error(`[MySQL] Failed to connect after ${retries} attempts: ${err.message}`);
+        console.error(`[MySQL] Connection failed: ${err.message}`);
+        return;
       }
       await new Promise((resolve) => setTimeout(resolve, delay));
     }

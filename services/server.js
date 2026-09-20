@@ -54,8 +54,25 @@ initDBWithRetry().catch((err) => {
 // API Routes & Health
 const apiRouter = express.Router();
 
-apiRouter.get("/health", (req, res) => {
-  res.json({ status: "ok", database: "mysql", timestamp: new Date().toISOString() });
+apiRouter.get("/health", async (req, res) => {
+  try {
+    const { query } = require("./db");
+    await query("SELECT 1 as ping");
+    res.json({ status: "ok", database: "connected", timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({
+      status: "error",
+      database: "disconnected",
+      message: err.message,
+      code: err.code || "UNKNOWN",
+      config: {
+        host: process.env.DB_HOST ? `${process.env.DB_HOST.slice(0, 4)}***` : "not_set",
+        database: process.env.DB_NAME || "not_set",
+        user: process.env.DB_USER || "not_set",
+        port: process.env.DB_PORT || 3306,
+      },
+    });
+  }
 });
 
 apiRouter.get("/", (req, res) => {
