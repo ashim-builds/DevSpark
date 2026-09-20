@@ -1,5 +1,12 @@
 const { query } = require('../db');
 
+function normalizeImageUrl(url) {
+  if (!url || typeof url !== 'string') return url || '';
+  const match = url.match(/\/api\/images\/\d+/);
+  if (match) return match[0];
+  return url;
+}
+
 function formatTeamMember(row) {
   if (!row) return null;
 
@@ -31,7 +38,7 @@ function formatTeamMember(row) {
     name: row.name,
     role: row.role || '',
     bio: row.bio || '',
-    photo: row.photo || '',
+    photo: normalizeImageUrl(row.photo),
     skills,
     social_links: socialLinks,
     createdAt: row.created_at,

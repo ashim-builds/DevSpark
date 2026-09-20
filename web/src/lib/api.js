@@ -50,6 +50,13 @@ async function fetchAPI(endpoint, options = {}) {
   return data;
 }
 
+export function normalizeMediaUrl(url) {
+  if (!url || typeof url !== 'string') return url || '';
+  const match = url.match(/\/api\/images\/\d+/);
+  if (match) return match[0];
+  return url;
+}
+
 // Auth API
 export const authAPI = {
   login: (credentials) => fetchAPI('/auth/login', { method: 'POST', body: credentials }),
@@ -58,8 +65,14 @@ export const authAPI = {
 
 // Projects API
 export const projectsAPI = {
-  getAll: () => fetchAPI('/projects'),
-  getById: (id) => fetchAPI(`/projects/${id}`),
+  getAll: async () => {
+    const list = await fetchAPI('/projects');
+    return (Array.isArray(list) ? list : []).map((p) => ({ ...p, image: normalizeMediaUrl(p.image) }));
+  },
+  getById: async (id) => {
+    const p = await fetchAPI(`/projects/${id}`);
+    return p ? { ...p, image: normalizeMediaUrl(p.image) } : p;
+  },
   create: (data) => fetchAPI('/projects', { method: 'POST', body: data }),
   update: (id, data) => fetchAPI(`/projects/${id}`, { method: 'PUT', body: data }),
   delete: (id) => fetchAPI(`/projects/${id}`, { method: 'DELETE' }),
@@ -67,8 +80,14 @@ export const projectsAPI = {
 
 // Team Members API
 export const teamAPI = {
-  getAll: () => fetchAPI('/team'),
-  getById: (id) => fetchAPI(`/team/${id}`),
+  getAll: async () => {
+    const list = await fetchAPI('/team');
+    return (Array.isArray(list) ? list : []).map((t) => ({ ...t, photo: normalizeMediaUrl(t.photo) }));
+  },
+  getById: async (id) => {
+    const t = await fetchAPI(`/team/${id}`);
+    return t ? { ...t, photo: normalizeMediaUrl(t.photo) } : t;
+  },
   create: (data) => fetchAPI('/team', { method: 'POST', body: data }),
   update: (id, data) => fetchAPI(`/team/${id}`, { method: 'PUT', body: data }),
   delete: (id) => fetchAPI(`/team/${id}`, { method: 'DELETE' }),
@@ -85,8 +104,14 @@ export const servicesAPI = {
 
 // Testimonials API
 export const testimonialsAPI = {
-  getAll: () => fetchAPI('/testimonials'),
-  getById: (id) => fetchAPI(`/testimonials/${id}`),
+  getAll: async () => {
+    const list = await fetchAPI('/testimonials');
+    return (Array.isArray(list) ? list : []).map((t) => ({ ...t, photo: normalizeMediaUrl(t.photo) }));
+  },
+  getById: async (id) => {
+    const t = await fetchAPI(`/testimonials/${id}`);
+    return t ? { ...t, photo: normalizeMediaUrl(t.photo) } : t;
+  },
   create: (data) => fetchAPI('/testimonials', { method: 'POST', body: data }),
   update: (id, data) => fetchAPI(`/testimonials/${id}`, { method: 'PUT', body: data }),
   delete: (id) => fetchAPI(`/testimonials/${id}`, { method: 'DELETE' }),

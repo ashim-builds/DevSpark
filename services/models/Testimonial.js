@@ -1,5 +1,12 @@
 const { query } = require('../db');
 
+function normalizeImageUrl(url) {
+  if (!url || typeof url !== 'string') return url || '';
+  const match = url.match(/\/api\/images\/\d+/);
+  if (match) return match[0];
+  return url;
+}
+
 function formatTestimonial(row) {
   if (!row) return null;
   return {
@@ -9,7 +16,7 @@ function formatTestimonial(row) {
     company: row.company || '',
     message: row.message || '',
     rating: row.rating !== null && row.rating !== undefined ? Number(row.rating) : 5,
-    photo: row.photo || '',
+    photo: normalizeImageUrl(row.photo),
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };

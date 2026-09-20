@@ -45,14 +45,11 @@ router.post('/upload', auth, uploadMiddleware, async (req, res) => {
       data: req.file.buffer,
     });
 
-    const host = req.get('host');
-    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
-    const fullUrl = `${protocol}://${host}/api/images/${saved.id}`;
     const relativeUrl = `/api/images/${saved.id}`;
 
     res.status(201).json({
       id: saved.id,
-      url: fullUrl,
+      url: relativeUrl,
       path: relativeUrl,
       filename: saved.filename,
       size: saved.size,

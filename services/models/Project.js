@@ -1,5 +1,12 @@
 const { query } = require('../db');
 
+function normalizeImageUrl(url) {
+  if (!url || typeof url !== 'string') return url || '';
+  const match = url.match(/\/api\/images\/\d+/);
+  if (match) return match[0];
+  return url;
+}
+
 function formatProject(row) {
   if (!row) return null;
   let techStack = row.tech_stack;
@@ -18,7 +25,7 @@ function formatProject(row) {
     _id: row.id.toString(),
     title: row.title,
     description: row.description || '',
-    image: row.image || '',
+    image: normalizeImageUrl(row.image),
     tech_stack: techStack,
     live_url: row.live_url || '',
     github_url: row.github_url || '',
