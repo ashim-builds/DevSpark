@@ -43,7 +43,7 @@ export default function ContactPage() {
     }
     setSubmitting(true);
     try {
-      await contactAPI.send(form);
+      await contactAPI.submit(form);
       setSubmitted(true);
       toast.success("Message sent successfully!");
     } catch {
@@ -176,12 +176,12 @@ export default function ContactPage() {
                     </div>
                     <button
                       type="submit"
-                      disabled={loading}
+                      disabled={submitting}
                       className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-white
                                  bg-primary-500 hover:bg-primary-600 transition-all duration-200
                                  shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {loading ? (
+                      {submitting ? (
                         <span className="flex items-center gap-2">
                           <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                           Sending…

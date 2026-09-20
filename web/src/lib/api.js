@@ -121,6 +121,7 @@ export const testimonialsAPI = {
 export const contactAPI = {
   getAll: () => fetchAPI('/contact'),
   submit: (data) => fetchAPI('/contact', { method: 'POST', body: data }),
+  send: (data) => fetchAPI('/contact', { method: 'POST', body: data }),
   delete: (id) => fetchAPI(`/contact/${id}`, { method: 'DELETE' }),
 };
 
